@@ -15,9 +15,13 @@ async def emojis(ctx):
     # emojisString = ""
     for emoji in ctx.guild.emojis:
         emojisList.append(emojiBot.get_emoji(emoji.id))
-    emojis = "";
+    animatedEmojis = ""
+    nonAnimatedEmojis = ""
     for emoji in emojisList:
-        emojis += f'{emoji}'
-    await ctx.send(emojis)
+        if emoji.animated:
+            animatedEmojis += f'{emoji}'
+        else:
+            nonAnimatedEmojis += f'{emoji}'
+    await ctx.send(f'ANIMATED EMOTES:\n' + animatedEmojis + f'\nEMOTES:\n' + nonAnimatedEmojis)
 
 emojiBot.run(TOKEN)

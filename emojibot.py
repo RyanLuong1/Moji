@@ -16,47 +16,35 @@ emojiBot = commands.Bot(command_prefix = '!')
 #     print("here!")
 @emojiBot.command(name='get')
 async def get(ctx):
+    serverEmotes.resetBot()
     for emoji in ctx.guild.emojis:
         if emoji.animated:
-            serverEmotes.animtedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
+            serverEmotes.animatedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
+            serverEmotes.animatedEmotesMessage += f'{emoji} ' + emoji.name + f'\n'  
         else:
             serverEmotes.regularEmotes.update( {emojiBot.get_emoji(emoji.id): 0} )
+            serverEmotes.regularEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
     await ctx.send(f'All emotes have been updated!')
 
 @emojiBot.command(name='emotes')
 async def emotes(ctx):
-    # emotesList = []
-    # # emojisString = ""
-    # for emoji in ctx.guild.emojis:
-    #     emotesList.append(emojiBot.get_emoji(emoji.id))
-    animatedEmotesMessage = ""
-    regularEmotesMessage = ""
-    for emoji in serverEmotes.animtedEmotes:
-        animatedEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
-    for emoji in serverEmotes.regularEmotes:  
-        regularEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
-    await ctx.send(f'__***' + f'ANIMATED EMOTES:' + f'***__\n' + animatedEmotesMessage)
-    await ctx.send(f'\u200b\n' + f'__***' + f'EMOTES:' + f'***__\n' + regularEmotesMessage)
+    if not serverEmotes.animatedEmotesMessage and not serverEmotes.regularEmotesMessage:
+        await ctx.send(f'Use !get command first to get all of your server emotes!')
+    else:
+        await ctx.send(serverEmotes.animatedEmotesMessage)
+        await ctx.send(serverEmotes.regularEmotesMessage)
 
 @emojiBot.command(name='animated')
 async def animated(ctx):
-    emotesList = []
-    for emoji in ctx.guild.emojis:
-        if emoji.animated:
-            emotesList.append(emojiBot.get_emoji(emoji.id))
-    animatedEmotesMessage = ""
-    for emoji in emotesList:
-        animatedEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
-    await ctx.send(f'__***' + f'ANIMATED EMOTES:' + f'***__\n' + animatedEmotesMessage)
+    if not serverEmotes.animatedEmotesMessage:
+        await ctx.send(f'No animated emotes to display!\nEither you forgot to use the !get command or your server does not have any animated emotes.')
+    else:
+        await ctx.send(serverEmotes.animatedEmotesMessage)
 
 @emojiBot.command(name='regular')
 async def regular(ctx):
-    emotesList = []
-    for emoji in ctx.guild.emojis:
-        if emoji.animated == False:
-            emotesList.append(emojiBot.get_emoji(emoji.id))
-    emotesMessage = ""
-    for emoji in emotesList:
-        emotesMessage += f'{emoji} ' + emoji.name + f'\n'
-    await ctx.send(f'__***' + f'EMOTES:' + f'***__\n' + emotesMessage)
+    if not serverEmotes.regularEmotesMessage:
+        await ctx.send(f'No regular emotes to display!\nEither you forgot to use the !get command or your server does not have regular emotes.')
+    else:
+        await ctx.send(serverEmotes.regularEmotesMessage)
 emojiBot.run(TOKEN)

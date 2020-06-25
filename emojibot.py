@@ -1,6 +1,7 @@
 import os
 import discord
 import asyncio
+import re
 from dotenv import load_dotenv
 from discord.ext import commands
 from emojibotclass import EmojiClass
@@ -32,6 +33,7 @@ async def emotes(ctx):
         await ctx.send(f'Your server does not have any custom emotes!')
     else:
         serverEmotes.resetEmotes()
+        serverEmotes.resetMessage()
         for emoji in ctx.guild.emojis:
             if emoji.animated:
                 serverEmotes.animatedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
@@ -68,6 +70,22 @@ async def counter(ctx):
     await ctx.send(serverEmotes.animatedEmotesCounterMessage)
     await ctx.send(f'\u200b\n' + serverEmotes.regularEmotesCounterMessage)
 
-@emojiBot.event()
+@emojiBot.event
 async def on_message(message):
+    if message.author == emojiBot.user:
+        return
+    # for key in serverEmotes.animatedEmotes:
+    #     if key in message:
+    # processedMessage = re.compile('<>')
+    # if processedMessage.search(message.content) != None:
+    #     for key in serverEmotes.animatedEmotes:
+    #         print(key.name)
+    for key in serverEmotes.animatedEmotes:
+        if str(key.id) in message.content:
+            (serverEmotes.animatedEmotes[key]) += 1
+    for key in serverEmotes.regularEmotes:
+        if str(key.id) in message.content:
+            (serverEmotes.regularEmotes[key]) += 1
+    await emojiBot.process_commands(message)
+
 emojiBot.run(TOKEN)

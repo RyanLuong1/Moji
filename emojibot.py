@@ -31,7 +31,7 @@ async def emotes(ctx):
     if not ctx.guild.emojis:
         await ctx.send(f'Your server does not have any custom emotes!')
     else:
-        serverEmotes.resetBot()
+        serverEmotes.resetEmotes()
         for emoji in ctx.guild.emojis:
             if emoji.animated:
                 serverEmotes.animatedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
@@ -57,4 +57,17 @@ async def regular(ctx):
         await ctx.send(f'No regular emotes to display! Either you forgot to use the !emotes command or your server does not have regular emotes.')
     else:
         await ctx.send(serverEmotes.regularEmotesMessage)
+
+@emojiBot.command(name="showcounter")
+async def counter(ctx):
+    serverEmotes.resetMessage()
+    for key in serverEmotes.animatedEmotes:
+        serverEmotes.animatedEmotesCounterMessage += f'{key}' + f' ' + str(serverEmotes.animatedEmotes[key]) + f'\n'
+    for key in serverEmotes.regularEmotes:
+        serverEmotes.regularEmotesCounterMessage += f'{key}' + f' ' + str(serverEmotes.regularEmotes[key]) + f'\n'
+    await ctx.send(serverEmotes.animatedEmotesCounterMessage)
+    await ctx.send(f'\u200b\n' + serverEmotes.regularEmotesCounterMessage)
+
+@emojiBot.event()
+async def on_message(message):
 emojiBot.run(TOKEN)

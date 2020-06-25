@@ -9,5 +9,5 @@ class EmojiClass():
         self.animatedEmotes.clear()
         self.regularEmotes.clear()
         self.animatedEmotesMessage = f'__***ANIMATED EMOTES:***__\n'
-        self.regularEmotesMessage = f'\u200b\n__***EMOTES:***__\n'
+        self.regularEmotesMessage = f'__***EMOTES:***__\n'
 

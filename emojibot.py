@@ -31,7 +31,26 @@ emojiBot = commands.Bot(command_prefix = '!')
 async def emotes(ctx):
     if not ctx.guild.emojis:
         await ctx.send(f'Your server does not have any custom emotes!')
+    elif serverEmotes.emotesSize == len(ctx.guild.emojis):
+        await ctx.send(f'No need to update the emotes!')
+    elif serverEmotes.emotesSize != len(ctx.guild.emojis) and serverEmotes.emotesSize != 0:
+        print(f'elif')
+        dict1 = serverEmotes.animatedEmotes
+        dict2 = serverEmotes.regularEmotes
+        serverEmotes.resetEmotes()
+        for emoji in ctx.guild.emojis:
+            if emoji.animated:
+                serverEmotes.animatedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
+                serverEmotes.animatedEmotesMessage += f'{emoji} ' + emoji.name + f'\n'  
+            else:
+                serverEmotes.regularEmotes.update( {emojiBot.get_emoji(emoji.id): 0} )
+                serverEmotes.regularEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
+        for key in dict1:
+            serverEmotes.animatedEmotes.update( {key: dict1[key]})
+        for key in dict2:
+            serverEmotes.regularEmotes.update( {key: dict2[key]})
     else:
+        print(f'else')
         serverEmotes.resetEmotes()
         serverEmotes.resetMessage()
         for emoji in ctx.guild.emojis:
@@ -41,6 +60,7 @@ async def emotes(ctx):
             else:
                 serverEmotes.regularEmotes.update( {emojiBot.get_emoji(emoji.id): 0} )
                 serverEmotes.regularEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
+            serverEmotes.emotesSize = len(serverEmotes.animatedEmotes) + len(serverEmotes.regularEmotes)
         await ctx.send(f'All emotes have been collected. All emotes will be display soon!')
         await asyncio.sleep(5)
         await ctx.send(serverEmotes.animatedEmotesMessage)

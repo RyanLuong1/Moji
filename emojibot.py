@@ -9,12 +9,9 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 serverEmotes = EmojiClass()
 emojiBot = commands.Bot(command_prefix = '!')
-# @emojiBot.event
-# async def on_ready():
-#     my_guild = emojiBot.get_guild(168194594708652033)
-#     for emoji in my_guild:
-#         serverEmotes.emojiList.update( {emojiBot.get_emoji(emoji.id): 0})
-#     print("here!")
+@emojiBot.event
+async def on_ready():
+    await emojiBot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
 # @emojiBot.command(name='get')
 # async def get(ctx):
 #     serverEmotes.resetBot()

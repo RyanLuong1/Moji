@@ -50,7 +50,6 @@ async def emotes(ctx):
         for key in dict2:
             serverEmotes.regularEmotes.update( {key: dict2[key]})
     else:
-        print(f'else')
         serverEmotes.resetEmotes()
         serverEmotes.resetMessage()
         for emoji in ctx.guild.emojis:
@@ -100,12 +99,14 @@ async def on_message(message):
     # if processedMessage.search(message.content) != None:
     #     for key in serverEmotes.animatedEmotes:
     #         print(key.name)
-    for key in serverEmotes.animatedEmotes:
-        if str(key.id) in message.content:
-            (serverEmotes.animatedEmotes[key]) += 1
-    for key in serverEmotes.regularEmotes:
-        if str(key.id) in message.content:
-            (serverEmotes.regularEmotes[key]) += 1
+    emotes = re.findall(r"\<(.*?)\>", str(message.content))
+    if emotes:
+        for key in serverEmotes.animatedEmotes:
+            if str(key.id) in message.content:
+                (serverEmotes.animatedEmotes[key]) += 1
+        for key in serverEmotes.regularEmotes:
+            if str(key.id) in message.content:
+                (serverEmotes.regularEmotes[key]) += 1
     await emojiBot.process_commands(message)
 
 emojiBot.run(TOKEN)

@@ -6,9 +6,12 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from emojibotclass import EmojiClass
 load_dotenv()
+
 TOKEN = os.getenv('DISCORD_TOKEN')
 serverEmotes = EmojiClass()
+
 emojiBot = commands.Bot(command_prefix = '!')
+
 @emojiBot.event
 async def on_ready():
     await emojiBot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
@@ -29,7 +32,8 @@ async def emotes(ctx):
     if not ctx.guild.emojis:
         await ctx.send(f'Your server does not have any custom emotes!')
     elif serverEmotes.emotesSize == len(ctx.guild.emojis):
-        await ctx.send(f'No need to update the emotes!')
+        await ctx.send(serverEmotes.animatedEmotesMessage)
+        await ctx.send(f'\u200b\n' + serverEmotes.regularEmotesMessage)
     elif serverEmotes.emotesSize != len(ctx.guild.emojis) and serverEmotes.emotesSize != 0:
         print(f'elif')
         dict1 = serverEmotes.animatedEmotes
@@ -90,12 +94,6 @@ async def counter(ctx):
 async def on_message(message):
     if message.author == emojiBot.user:
         return
-    # for key in serverEmotes.animatedEmotes:
-    #     if key in message:
-    # processedMessage = re.compile('<>')
-    # if processedMessage.search(message.content) != None:
-    #     for key in serverEmotes.animatedEmotes:
-    #         print(key.name)
     emotes = re.findall(r"\<(.*?)\>", str(message.content))
     if emotes:
         for key in serverEmotes.animatedEmotes:

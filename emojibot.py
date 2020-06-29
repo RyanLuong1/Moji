@@ -53,7 +53,7 @@ async def emotes(ctx):
         for key in dict2:
             if key in serverEmotes.regularEmotes:
                 serverEmotes.regularEmotes.update( {key: dict2[key]})
-        server.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regular)
+        serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regular)
     else:
         serverEmotes.resetEmotes()
         messageForAnimated = f'__***ANIMATED EMOTES:***__\n'
@@ -77,15 +77,19 @@ async def animated(ctx):
         await ctx.send(f'No animated emotes to display! Either you forgot to use the !emotes command or your server does not have any animated emotes.')
     else:
         message = f'__***ANIMATED EMOTES:***__\n'
-
-        await ctx.send(serverEmotes.animatedEmotesMessage)
+        for key in serverEmotes.animatedEmotes:
+            message += f'{key}' + key.name + f'\n'
+        await ctx.send(message)
 
 @emojiBot.command(name='regular')
 async def regular(ctx):
     if not serverEmotes.regularEmotes:
         await ctx.send(f'No regular emotes to display! Either you forgot to use the !emotes command or your server does not have regular emotes.')
     else:
-        await ctx.send(serverEmotes.regularEmotesMessage)
+        message = f'__***EMOTES:***__\n'
+        for key in serverEmotes.regularEmotes:
+            message += f'{key}' + key.name + f'\n'
+        await ctx.send(message)
 
 @emojiBot.command(name="showcounter")
 async def counter(ctx):

@@ -121,14 +121,18 @@ async def counter(ctx):
 async def on_message(message):
     if message.author == emojiBot.user:
         return
-    emotes = re.findall(r"\<(.*?)\>", str(message.content))
+    # emotes = re.findall(r"\<(.*?)\>", str(message.content))
+    emotes = re.findall(r"\d+", str(message.content))
+    print(emotes)
     if emotes:
         for key in serverEmotes.animatedEmotes:
-            if str(key.id) in message.content:
-                (serverEmotes.animatedEmotes[key]) += 1
+            if str(key.id) in emotes:
+                occurrences = emotes.count(str(key.id))
+                (serverEmotes.animatedEmotes[key]) += occurrences
         for key in serverEmotes.regularEmotes:
-            if str(key.id) in message.content:
-                (serverEmotes.regularEmotes[key]) += 1
+            if str(key.id) in emotes:
+                occurrences = emotes.count(str(key.id))
+                (serverEmotes.regularEmotes[key]) += occurrences
     await emojiBot.process_commands(message)
 
 

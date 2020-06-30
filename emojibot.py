@@ -2,6 +2,7 @@ import os
 import discord
 import asyncio
 import re
+import copy
 from dotenv import load_dotenv
 from discord.ext import commands
 from emojibotclass import EmojiClass
@@ -35,8 +36,12 @@ async def emotes(ctx):
     #     await ctx.send(serverEmotes.animatedEmotesMessage)
     #     await ctx.send(f'\u200b\n' + serverEmotes.regularEmotesMessage)
     elif serverEmotes.emotesAmt != len(ctx.guild.emojis) and serverEmotes.emotesAmt != 0:
-        dict1 = serverEmotes.animatedEmotes
-        dict2 = serverEmotes.regularEmotes
+        dict1 = {}
+        dict2 = {}
+        for key in serverEmotes.animatedEmotes:
+            dict1.update( {key: serverEmotes.animatedEmotes[key]})
+        for key in serverEmotes.regularEmotes:
+            dict2.update( {key: serverEmotes.regularEmotes[key]})
         messageForAnimated = f'__***ANIMATED EMOTES:***__\n'
         messageForRegular = f'__***EMOTES:***__\n'
         serverEmotes.resetEmotes()
@@ -53,7 +58,11 @@ async def emotes(ctx):
         for key in dict2:
             if key in serverEmotes.regularEmotes:
                 serverEmotes.regularEmotes.update( {key: dict2[key]})
-        serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regular)
+        serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regularEmotes)
+        await ctx.send(f'All emotes have been collected. All emotes will be display soon!')
+        await asyncio.sleep(5)
+        await ctx.send(messageForAnimated)
+        await ctx.send(f'\u200b\n' + messageForRegular)
     else:
         serverEmotes.resetEmotes()
         messageForAnimated = f'__***ANIMATED EMOTES:***__\n'
@@ -93,13 +102,14 @@ async def regular(ctx):
 
 @emojiBot.command(name="showcounter")
 async def counter(ctx):
-    serverEmotes.resetMessage()
+    messageForAnimated = f'__***ANIMATED EMOTES:***__\n'
+    messageForRegular = f'__***EMOTES:***__\n'
     for key in serverEmotes.animatedEmotes:
-        serverEmotes.animatedEmotesCounterMessage += f'{key}' + f' ' + str(serverEmotes.animatedEmotes[key]) + f'\n'
+        messageForAnimated += f'{key}' + f' ' + str(serverEmotes.animatedEmotes[key]) + f'\n'
     for key in serverEmotes.regularEmotes:
-        serverEmotes.regularEmotesCounterMessage += f'{key}' + f' ' + str(serverEmotes.regularEmotes[key]) + f'\n'
-    await ctx.send(serverEmotes.animatedEmotesCounterMessage)
-    await ctx.send(f'\u200b\n' + serverEmotes.regularEmotesCounterMessage)
+        messageForRegular += f'{key}' + f' ' + str(serverEmotes.regularEmotes[key]) + f'\n'
+    await ctx.send(messageForAnimated)
+    await ctx.send(f'\u200b\n' + messageForRegular)
 
 # @emojiBot.command(name='top5')
 # async def showTop5(ctx):

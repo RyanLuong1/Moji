@@ -76,7 +76,7 @@ async def emotes(ctx):
                 messageForRegular += f'{emoji} ' + emoji.name + f'\n'   
             serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regularEmotes)
         await ctx.send(f'All emotes have been collected. All emotes will be display soon!')
-        await asyncio.sleep(5)
+        # await asyncio.sleep(5)
         await ctx.send(messageForAnimated)
         await ctx.send(f'\u200b\n' + messageForRegular)
 
@@ -111,28 +111,43 @@ async def counter(ctx):
     await ctx.send(messageForAnimated)
     await ctx.send(f'\u200b\n' + messageForRegular)
 
-# @emojiBot.command(name='top5')
-# async def showTop5(ctx):
-#     top5Animated = ""
-#     top5Regular = ""
-#     for key in 
+@emojiBot.command(name='top5')
+async def showTop5(ctx):
+    if serverEmotes.emotesAmt == 0:
+        await ctx.send("You don't have any emotes. Use !emotes to get it!")
+    else:
+        serverEmotes.getTop5()
+        top5Animated = f'__***TOP 5 ANIMATED EMOTES:***__\n'
+        top5Regular = f'__***TOP 5 EMOTES:***__\n'
+        for key in serverEmotes.top5AnimatedEmotes:
+            top5Animated += {key} + f' ' + serverEmotes.top5AnimatedEmotes[key] + f'\n'
+        for key in serverEmotes.top5RegularEmotes:
+            top5Regular += {key} + f' ' + serverEmotes.top5RegularEmotes[key] + f'\n'
+        await ctx.send(top5Animated)
+        await ctx.send(f'\u200b\n' + top5Regular)
 
 @emojiBot.event
 async def on_message(message):
     if message.author == emojiBot.user:
         return
     # emotes = re.findall(r"\<(.*?)\>", str(message.content))
-    emotes = re.findall(r"\d+", str(message.content))
-    print(emotes)
-    if emotes:
-        for key in serverEmotes.animatedEmotes:
-            if str(key.id) in emotes:
-                occurrences = emotes.count(str(key.id))
-                (serverEmotes.animatedEmotes[key]) += occurrences
-        for key in serverEmotes.regularEmotes:
-            if str(key.id) in emotes:
-                occurrences = emotes.count(str(key.id))
-                (serverEmotes.regularEmotes[key]) += occurrences
+    emotesId = re.findall(r"(\d+.)\>", str(message.content))
+    print(emotesId)
+    for id in emotesId:
+        emotes = emojiBot.get_emoji(int(id))
+        if emotes != None:
+            if emotes.animated:
+                (serverEmotes.animatedEmotes[emotes]) += 1
+            else: 
+                (serverEmotes.regularEmotes[emotes]) += 1
+        # for key in serverEmotes.animatedEmotes:
+        #     if str(key.id) in emotes:
+        #         occurrences = emotes.count(str(key.id))
+        #         (serverEmotes.animatedEmotes[key]) += occurrences
+        # for key in serverEmotes.regularEmotes:
+        #     if str(key.id) in emotes:
+        #         occurrences = emotes.count(str(key.id))
+        #         (serverEmotes.regularEmotes[key]) += occurrences
     await emojiBot.process_commands(message)
 
 

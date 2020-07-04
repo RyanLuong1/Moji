@@ -11,24 +11,24 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 serverEmotes = EmojiClass()
 
-emojiBot = commands.Bot(command_prefix = '!')
+bot = commands.Bot(command_prefix = '!')
 
-@emojiBot.event
+@bot.event
 async def on_ready():
-    await emojiBot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
-# @emojiBot.command(name='get')
+    await bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
+# @bot.command(name='get')
 # async def get(ctx):
 #     serverEmotes.resetBot()
 #     for emoji in ctx.guild.emojis:
 #         if emoji.animated:
-#             serverEmotes.animatedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
+#             serverEmotes.animatedEmotes.update( {bot.get_emoji(emoji.id): 0})
 #             serverEmotes.animatedEmotesMessage += f'{emoji} ' + emoji.name + f'\n'  
 #         else:
-#             serverEmotes.regularEmotes.update( {emojiBot.get_emoji(emoji.id): 0} )
+#             serverEmotes.regularEmotes.update( {bot.get_emoji(emoji.id): 0} )
 #             serverEmotes.regularEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
 #     await ctx.send(f'All emotes have been updated!')
 
-@emojiBot.command(name='emotes')
+@bot.command(name='emotes')
 async def emotes(ctx):
     emojisList = ctx.guild.emojis
     embed = discord.Embed(
@@ -37,12 +37,13 @@ async def emotes(ctx):
         colour = discord.Colour.blue()
     )
     embed.set_footer(text="Page")
+    for emojis in emojisList:
+        serverEmotes.emotesList.update({bot.get_emoji(emojis.id): 0})
     for x in range(15):
-        emojis = emojiBot.get_emoji(emojisList[x].id)
-        serverEmotes.emotesList.update( {emojis: 0})
+        emojis = bot.get_emoji(emojisList[x].id)
         message = f'{x+1}. ' + f'{emojis}'
         embed.add_field(name=emojis.name, value=message, inline=False)
-    reactionMessage = await ctx.send(ctx.message.channel, embed=embed)
+    reactionMessage = await ctx.send(embed=embed)
     await reactionMessage.add_reaction('◀️')
     await reactionMessage.add_reaction('▶️')
     # await ctx.send_message(channel, embed=embed)
@@ -64,10 +65,10 @@ async def emotes(ctx):
     #     serverEmotes.resetEmotes()
     #     for emoji in ctx.guild.emojis:
     #         if emoji.animated:
-    #             serverEmotes.animatedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
+    #             serverEmotes.animatedEmotes.update( {bot.get_emoji(emoji.id): 0})
     #             messageForAnimated += f'{emoji} ' + emoji.name + f'\n'  
     #         else:
-    #             serverEmotes.regularEmotes.update( {emojiBot.get_emoji(emoji.id): 0} )
+    #             serverEmotes.regularEmotes.update( {bot.get_emoji(emoji.id): 0} )
     #             messageForRegular += f'{emoji} ' + emoji.name + f'\n'
     #     for key in dict1:
     #         if key in serverEmotes.animatedEmotes:
@@ -86,10 +87,10 @@ async def emotes(ctx):
     #     messageForRegular = f'```__***EMOTES:***__\n```'
     #     for emoji in ctx.guild.emojis:
     #         if emoji.animated:
-    #             serverEmotes.animatedEmotes.update( {emojiBot.get_emoji(emoji.id): 0})
+    #             serverEmotes.animatedEmotes.update( {bot.get_emoji(emoji.id): 0})
     #             messageForAnimated += f'{emoji} ' + emoji.name + f'\n'
     #         else:
-    #             serverEmotes.regularEmotes.update( {emojiBot.get_emoji(emoji.id): 0} )
+    #             serverEmotes.regularEmotes.update( {bot.get_emoji(emoji.id): 0} )
     #             messageForRegular += f'{emoji} ' + emoji.name + f'\n'   
     #         serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regularEmotes)
     #     await ctx.send(f'All emotes have been collected. All emotes will be display soon!')
@@ -97,7 +98,19 @@ async def emotes(ctx):
     #     await ctx.send(messageForAnimated)
     #     await ctx.send(f'\u200b\n' + messageForRegular)
 
-# @emojiBot.command(name='animated')
+@bot.event
+async def on_reaction_add(reaction, user):
+    if user.bot:
+        return
+    if len(reaction.message.embeds) == 1:
+        if reaction.emoji == '◀️':
+            print("Left")
+            await reaction.remove(user)
+        elif reaction.emoji == '▶️':
+            print("Right")
+            await reaction.remove(user)
+    print(len(reaction.message.embeds))
+# @bot.command(name='animated')
 # async def animated(ctx):
 #     if not serverEmotes.animatedEmotes:
 #         await ctx.send(f'No animated emotes to display! Either you forgot to use the !emotes command or your server does not have any animated emotes.')
@@ -107,7 +120,7 @@ async def emotes(ctx):
 #             message += f'{key}' + key.name + f'\n'
 #         await ctx.send(message)
 
-# @emojiBot.command(name='regular')
+# @bot.command(name='regular')
 # async def regular(ctx):
 #     if not serverEmotes.regularEmotes:
 #         await ctx.send(f'No regular emotes to display! Either you forgot to use the !emotes command or your server does not have regular emotes.')
@@ -117,7 +130,7 @@ async def emotes(ctx):
 #             message += f'{key}' + key.name + f'\n'
 #         await ctx.send(message)
 
-# @emojiBot.command(name="showcounter")
+# @bot.command(name="showcounter")
 # async def counter(ctx):
 #     messageForAnimated = f'__***ANIMATED EMOTES:***__\n'
 #     messageForRegular = f'__***EMOTES:***__\n'
@@ -128,7 +141,7 @@ async def emotes(ctx):
 #     await ctx.send(messageForAnimated)
 #     await ctx.send(f'\u200b\n' + messageForRegular)
 
-# # @emojiBot.command(name='top5')
+# # @bot.command(name='top5')
 # # async def showTop5(ctx):
 # #     if serverEmotes.emotesAmt == 0:
 # #         await ctx.send("You don't have any emotes. Use !emotes to get it!")
@@ -143,15 +156,15 @@ async def emotes(ctx):
 # #         await ctx.send(top5Animated)
 # #         await ctx.send(f'\u200b\n' + top5Regular)
 
-# @emojiBot.event
+# @bot.event
 # async def on_message(message):
-#     if message.author == emojiBot.user:
+#     if message.author == bot.user:
 #         return
 #     # emotes = re.findall(r"\<(.*?)\>", str(message.content))
 #     emotesId = re.findall(r"(\d+.)\>", str(message.content))
 #     print(emotesId)
 #     for id in emotesId:
-#         emotes = emojiBot.get_emoji(int(id))
+#         emotes = bot.get_emoji(int(id))
 #         if emotes != None:
 #             if emotes.animated:
 #                 (serverEmotes.animatedEmotes[emotes]) += 1
@@ -165,7 +178,7 @@ async def emotes(ctx):
 #         #     if str(key.id) in emotes:
 #         #         occurrences = emotes.count(str(key.id))
 #         #         (serverEmotes.regularEmotes[key]) += occurrences
-#     await emojiBot.process_commands(message)
+#     await bot.process_commands(message)
 
 
-emojiBot.run(TOKEN)
+bot.run(TOKEN)

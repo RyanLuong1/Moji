@@ -31,7 +31,7 @@ async def on_ready():
 @bot.command(name='emotes')
 async def emotes(ctx):
     emojisList = ctx.guild.emojis
-    n_times = math.ceil(len(emojisList) / 15)
+    n_times = math.ceil(len(emojisList) / 20)
     print(n_times)
     for x in range(n_times):
         embed = discord.Embed(
@@ -45,9 +45,9 @@ async def emotes(ctx):
     for emojis in emojisList:
         serverEmotes.emotesList.update({bot.get_emoji(emojis.id): 0})
     for x in range(len(emojisList)):
-            i = math.floor(x/15)
+            i = math.floor(x/20)
             emojis = bot.get_emoji(emojisList[x].id)
-            message = f'{x+1}. ' + f'{emojis}'
+            message = f'{x+1}. {emojis}'
             serverEmotes.embedList[i].add_field(name=emojis.name, value=message, inline=False)
     reactionMessage = await ctx.send(embed=serverEmotes.embedList[0])
     await reactionMessage.add_reaction('◀️')

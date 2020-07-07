@@ -133,51 +133,6 @@ async def on_reaction_add(reaction, user):
                 embed = serverEmotes.embedList[pg_num]
                 await reaction.message.edit(embed=embed)
             await reaction.remove(user)
-# @bot.command(name='animated')
-# async def animated(ctx):
-#     if not serverEmotes.animatedEmotes:
-#         await ctx.send(f'No animated emotes to display! Either you forgot to use the !emotes command or your server does not have any animated emotes.')
-#     else:
-#         message = f'__***ANIMATED EMOTES:***__\n'
-#         for key in serverEmotes.animatedEmotes:
-#             message += f'{key}' + key.name + f'\n'
-#         await ctx.send(message)
-
-# @bot.command(name='regular')
-# async def regular(ctx):
-#     if not serverEmotes.regularEmotes:
-#         await ctx.send(f'No regular emotes to display! Either you forgot to use the !emotes command or your server does not have regular emotes.')
-#     else:
-#         message = f'__***EMOTES:***__\n'
-#         for key in serverEmotes.regularEmotes:
-#             message += f'{key}' + key.name + f'\n'
-#         await ctx.send(message)
-
-# @bot.command(name="showcounter")
-# async def counter(ctx):
-#     messageForAnimated = f'__***ANIMATED EMOTES:***__\n'
-#     messageForRegular = f'__***EMOTES:***__\n'
-#     for key in serverEmotes.animatedEmotes:
-#         messageForAnimated += f'{key}' + f' ' + str(serverEmotes.animatedEmotes[key]) + f'\n'
-#     for key in serverEmotes.regularEmotes:
-#         messageForRegular += f'{key}' + f' ' + str(serverEmotes.regularEmotes[key]) + f'\n'
-#     await ctx.send(messageForAnimated)
-#     await ctx.send(f'\u200b\n' + messageForRegular)
-
-# # @bot.command(name='top5')
-# # async def showTop5(ctx):
-# #     if serverEmotes.emotesAmt == 0:
-# #         await ctx.send("You don't have any emotes. Use !emotes to get it!")
-# #     else:
-# #         serverEmotes.getTop5()
-# #         top5Animated = f'__***TOP 5 ANIMATED EMOTES:***__\n'
-# #         top5Regular = f'__***TOP 5 EMOTES:***__\n'
-# #         for key in serverEmotes.top5AnimatedEmotes:
-# #             top5Animated += {key} + f' ' + serverEmotes.top5AnimatedEmotes[key] + f'\n'
-# #         for key in serverEmotes.top5RegularEmotes:
-# #             top5Regular += {key} + f' ' + serverEmotes.top5RegularEmotes[key] + f'\n'
-# #         await ctx.send(top5Animated)
-# #         await ctx.send(f'\u200b\n' + top5Regular)
 
 # @bot.event
 # async def on_message(message):

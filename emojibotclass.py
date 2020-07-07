@@ -5,6 +5,7 @@ class EmojiClass():
         # self.animatedEmotes = {}
         # self.regularEmotes = {}
         self.emotesList = {}
+        self.embedList = []
         self.top5AnimatedEmotes = {}
         self.top5RegularEmotes = {}
         self.emotesAmt = 0

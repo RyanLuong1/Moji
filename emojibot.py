@@ -2,7 +2,7 @@ import os
 import discord
 import asyncio
 import re
-import copy
+import math
 from dotenv import load_dotenv
 from discord.ext import commands
 from emojibotclass import EmojiClass
@@ -31,19 +31,25 @@ async def on_ready():
 @bot.command(name='emotes')
 async def emotes(ctx):
     emojisList = ctx.guild.emojis
-    embed = discord.Embed(
+    n_times = math.ceil(len(emojisList) / 15)
+    for x in range(n_times):
+        embed = discord.Embed(
         title = "Emotes",
         description = "",
         colour = discord.Colour.blue()
-    )
-    embed.set_footer(text="Page")
+        )
+        pg_num = f'Page {x}/{n_times+1}'
+        embed.set_footer(text=pg_num)
+        serverEmotes.embedList.append(embed)
+    print(len(serverEmotes.embedList))
     for emojis in emojisList:
         serverEmotes.emotesList.update({bot.get_emoji(emojis.id): 0})
-    for x in range(15):
-        emojis = bot.get_emoji(emojisList[x].id)
-        message = f'{x+1}. ' + f'{emojis}'
-        embed.add_field(name=emojis.name, value=message, inline=False)
-    reactionMessage = await ctx.send(embed=embed)
+    for x in range(len(emojisList)):
+            emojis = bot.get_emoji(emojisList[x].id)
+            message = f'{x+1}. ' + f'{emojis}'
+            embed.add_field(name=emojis.name, value=message, inline=False)
+    print(len(serverEmotes.embedList))
+    reactionMessage = await ctx.send(embed=serverEmotes.embedList[1])
     await reactionMessage.add_reaction('◀️')
     await reactionMessage.add_reaction('▶️')
     # await ctx.send_message(channel, embed=embed)
@@ -104,10 +110,8 @@ async def on_reaction_add(reaction, user):
         return
     if len(reaction.message.embeds) == 1:
         if reaction.emoji == '◀️':
-            print("Left")
             await reaction.remove(user)
         elif reaction.emoji == '▶️':
-            print("Right")
             await reaction.remove(user)
     print(len(reaction.message.embeds))
 # @bot.command(name='animated')

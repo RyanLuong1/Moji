@@ -49,7 +49,7 @@ async def emotes(ctx):
             emojis = bot.get_emoji(emojisList[x].id)
             message = f'{x+1}. ' + f'{emojis}'
             serverEmotes.embedList[i].add_field(name=emojis.name, value=message, inline=False)
-    reactionMessage = await ctx.send(embed=serverEmotes.embedList[4])
+    reactionMessage = await ctx.send(embed=serverEmotes.embedList[0])
     await reactionMessage.add_reaction('◀️')
     await reactionMessage.add_reaction('▶️')
     # await ctx.send_message(channel, embed=embed)
@@ -108,12 +108,31 @@ async def emotes(ctx):
 async def on_reaction_add(reaction, user):
     if user.bot:
         return
-    if len(reaction.message.embeds) == 1:
+    if reaction.message.embeds[0].title == "Emotes":
         if reaction.emoji == '◀️':
+            if serverEmotes.pg_num == 0:
+                serverEmotes.pg_num = len(serverEmotes.embedList) - 1
+                pg_num = serverEmotes.pg_num
+                embed = serverEmotes.embedList[pg_num]
+                await reaction.message.edit(embed=embed)
+            else:
+                serverEmotes.pg_num -= 1
+                pg_num = serverEmotes.pg_num
+                embed = serverEmotes.embedList[pg_num]
+                await reaction.message.edit(embed=embed)
             await reaction.remove(user)
         elif reaction.emoji == '▶️':
+            if serverEmotes.pg_num == len(serverEmotes.embedList) - 1:
+                serverEmotes.pg_num = 0
+                pg_num = serverEmotes.pg_num
+                embed = serverEmotes.embedList[pg_num]
+                await reaction.message.edit(embed=embed)
+            else:
+                serverEmotes.pg_num += 1
+                pg_num = serverEmotes.pg_num
+                embed = serverEmotes.embedList[pg_num]
+                await reaction.message.edit(embed=embed)
             await reaction.remove(user)
-    print(len(reaction.message.embeds))
 # @bot.command(name='animated')
 # async def animated(ctx):
 #     if not serverEmotes.animatedEmotes:

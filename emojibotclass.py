@@ -8,7 +8,7 @@ class EmojiClass():
         self.embedList = []
         self.top5AnimatedEmotes = {}
         self.top5RegularEmotes = {}
-        self.emotesAmt = 0
+        self.pg_num = 0
 
     # def resetEmotes(self):
     #     self.animatedEmotes.clear()

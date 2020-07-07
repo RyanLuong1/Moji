@@ -16,17 +16,6 @@ bot = commands.Bot(command_prefix = '!')
 @bot.event
 async def on_ready():
     await bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
-# @bot.command(name='get')
-# async def get(ctx):
-#     serverEmotes.resetBot()
-#     for emoji in ctx.guild.emojis:
-#         if emoji.animated:
-#             serverEmotes.animatedEmotes.update( {bot.get_emoji(emoji.id): 0})
-#             serverEmotes.animatedEmotesMessage += f'{emoji} ' + emoji.name + f'\n'  
-#         else:
-#             serverEmotes.regularEmotes.update( {bot.get_emoji(emoji.id): 0} )
-#             serverEmotes.regularEmotesMessage += f'{emoji} ' + emoji.name + f'\n'
-#     await ctx.send(f'All emotes have been updated!')
 
 @bot.command(name='emotes')
 async def emotes(ctx):

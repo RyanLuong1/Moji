@@ -38,18 +38,17 @@ async def emotes(ctx):
         description = "",
         colour = discord.Colour.blue()
         )
-        pg_num = f'Page {x}/{n_times+1}'
+        pg_num = f'Page {x+1}/{n_times+1}'
         embed.set_footer(text=pg_num)
         serverEmotes.embedList.append(embed)
-    print(len(serverEmotes.embedList))
     for emojis in emojisList:
         serverEmotes.emotesList.update({bot.get_emoji(emojis.id): 0})
     for x in range(len(emojisList)):
+            i = math.floor(x/15)
             emojis = bot.get_emoji(emojisList[x].id)
             message = f'{x+1}. ' + f'{emojis}'
-            embed.add_field(name=emojis.name, value=message, inline=False)
-    print(len(serverEmotes.embedList))
-    reactionMessage = await ctx.send(embed=serverEmotes.embedList[1])
+            serverEmotes.embedList[i].add_field(name=emojis.name, value=message, inline=False)
+    reactionMessage = await ctx.send(embed=serverEmotes.embedList[0])
     await reactionMessage.add_reaction('◀️')
     await reactionMessage.add_reaction('▶️')
     # await ctx.send_message(channel, embed=embed)

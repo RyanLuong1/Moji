@@ -24,10 +24,11 @@ async def emotes(ctx):
         await ctx.send(f'Your server does not have any custom emotes!')
     elif len(serverEmotes.emotes_dict) != len(list_of_emotes) and len(serverEmotes.emotes_dict) != 0:
         for key,value in serverEmotes.emotes_dict:
-            if key not in list_of_emotes:
+            emoji = bot.get_emoji(key)
+            if emoji not in list_of_emotes:
                 del serverEmotes.emotes_dict[key]
         for emojis in list_of_emotes:
-            if emojis not in serverEmotes.emotes_dict:
+            if emojis.id not in serverEmotes.emotes_dict:
                 serverEmotes.emotes_dict.update({emojis.id: 0})
         n_times = math.ceil(len(list_of_emotes) / 20)
         for x in range(n_times):
@@ -50,6 +51,16 @@ async def emotes(ctx):
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')
     elif len(serverEmotes.emotes_dict) == len(list_of_emotes):
+        isTheSame = True
+        for key,value in serverEmotes.emotes_dict:
+            emoji = bot.get_emoji(key)
+            if emoji not in list_of_emotes:
+                del serverEmotes.emotes_dict[key]
+                isTheSame = False
+        if isTheSame == False:
+            for emojis in list_of_emotes:
+                if emojis.id not in serverEmotes.emotes_dict:
+                    serverEmotes.emotes_dict.update({emojis.id: 0})
         for embeds in serverEmotes.embed_list:
             embeds.clear_fields()
         x = 0

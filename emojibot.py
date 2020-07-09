@@ -27,7 +27,7 @@ async def emotes(ctx):
             if key not in list_of_emotes:
                 del serverEmotes.emotes_dict[key]
         for emojis in list_of_emotes:
-            if emojis.id not in serverEmotes.emotes_dict:
+            if emojis not in serverEmotes.emotes_dict:
                 serverEmotes.emotes_dict.update({emojis.id: 0})
         n_times = math.ceil(len(list_of_emotes) / 20)
         for x in range(n_times):
@@ -50,7 +50,16 @@ async def emotes(ctx):
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')
     elif len(serverEmotes.emotes_dict) == len(list_of_emotes):
-        reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
+        for embeds in serverEmotes.embed_list:
+            embeds.clear_fields()
+        x = 0
+        for key, value in serverEmotes.emotes_dict.items():
+            index = math.floor(x/20)
+            emojis = bot.get_emoji(key)
+            message = f'{x+1}. {emojis}: {value}'
+            serverEmotes.embed_list[index].add_field(name=emojis.name, value=message, inline=False)
+            x += 1
+        reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0]) 
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')
     else:

@@ -8,6 +8,8 @@ from discord.ext import commands
 from emojibotclass import EmojiClass
 load_dotenv()
 
+#TODO: Sort the dict by values
+
 TOKEN = os.getenv('DISCORD_TOKEN')
 serverEmotes = EmojiClass()
 
@@ -175,11 +177,14 @@ async def on_reaction_add(reaction, user):
                 await reaction.message.edit(embed=embed)
             await reaction.remove(user)
 
+"""
+Discord bots write emotes as <:name_of_emotes:#>. 
+finall gets all the strings from the message that follow this pattern, #>, and then removing > at the end.
+"""
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
-    # emotes = re.findall(r"\<(.*?)\>", str(message.content))
     emotesId = re.findall(r"(\d+.)\>", str(message.content))
     for id in emotesId:
         emotes = bot.get_emoji(int(id))

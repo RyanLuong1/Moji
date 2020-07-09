@@ -19,9 +19,10 @@ async def on_ready():
 
 @bot.command(name='emotes')
 async def emotes(ctx):
+    if not ctx.guild.emojis:
+        await ctx.send(f'Your server does not have any custom emotes!')
     emojisList = ctx.guild.emojis
     n_times = math.ceil(len(emojisList) / 20)
-    print(n_times)
     for x in range(n_times):
         embed = discord.Embed(
         title = "Emotes",
@@ -33,18 +34,17 @@ async def emotes(ctx):
         serverEmotes.embedList.append(embed)
     for emojis in emojisList:
         serverEmotes.emotesList.update({bot.get_emoji(emojis.id): 0})
-    for x in range(len(emojisList)):
+    x = 0
+    for key, value in serverEmotes.emotesList.items():
             i = math.floor(x/20)
-            emojis = bot.get_emoji(emojisList[x].id)
-            message = f'{x+1}. {emojis}'
+            emojis = bot.get_emoji(key.id)
+            message = f'{x+1}. {emojis}: {value}'
             serverEmotes.embedList[i].add_field(name=emojis.name, value=message, inline=False)
+            x += 1
     reactionMessage = await ctx.send(embed=serverEmotes.embedList[0])
     await reactionMessage.add_reaction('◀️')
     await reactionMessage.add_reaction('▶️')
     # await ctx.send_message(channel, embed=embed)
-    
-    # if not ctx.guild.emojis:
-    #     await ctx.send(f'Your server does not have any custom emotes!')
     # # elif serverEmotes.emotesSize == len(ctx.guild.emojis):
     # #     await ctx.send(serverEmotes.animatedEmotesMessage)
     # #     await ctx.send(f'\u200b\n' + serverEmotes.regularEmotesMessage)

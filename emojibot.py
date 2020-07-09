@@ -27,9 +27,8 @@ async def emotes(ctx):
             if key not in list_of_emotes:
                 del serverEmotes.emotes_dict[key]
         for emojis in list_of_emotes:
-            emoji = bot.get_emoji(emojis.id)
-            if emoji not in serverEmotes.emotes_dict:
-                serverEmotes.emotes_dict.update({emoji: 0})
+            if emojis.id not in serverEmotes.emotes_dict:
+                serverEmotes.emotes_dict.update({emojis.id: 0})
         n_times = math.ceil(len(list_of_emotes) / 20)
         for x in range(n_times):
             embed = discord.Embed(
@@ -43,7 +42,7 @@ async def emotes(ctx):
         x = 0
         for key, value in serverEmotes.emotes_dict.items():
                 index = math.floor(x/20)
-                emojis = bot.get_emoji(key.id)
+                emojis = bot.get_emoji(key)
                 message = f'{x+1}. {emojis}: {value}'
                 serverEmotes.embed_list[index].add_field(name=emojis.name, value=message, inline=False)
                 x += 1
@@ -66,11 +65,11 @@ async def emotes(ctx):
             embed.set_footer(text=pg_num)
             serverEmotes.embed_list.append(embed)
         for emojis in list_of_emotes:
-            serverEmotes.emotes_dict.update({bot.get_emoji(emojis.id): 0})
+            serverEmotes.emotes_dict.update({emojis.id: 0})
         x = 0
         for key, value in serverEmotes.emotes_dict.items():
                 index = math.floor(x/20)
-                emojis = bot.get_emoji(key.id)
+                emojis = bot.get_emoji(key)
                 message = f'{x+1}. {emojis}: {value}'
                 serverEmotes.embed_list[index].add_field(name=emojis.name, value=message, inline=False)
                 x += 1
@@ -133,52 +132,48 @@ async def on_reaction_add(reaction, user):
     if reaction.message.embeds[0].title == "Emotes":
         if reaction.emoji == '◀️':
             if serverEmotes.pg_num == 0:
-                serverEmotes.pg_num = len(serverEmotes.embedList) - 1
+                serverEmotes.pg_num = len(serverEmotes.embed_list) - 1
                 pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embedList[pg_num]
+                embed = serverEmotes.embed_list[pg_num]
                 await reaction.message.edit(embed=embed)
             else:
                 serverEmotes.pg_num -= 1
                 pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embedList[pg_num]
+                embed = serverEmotes.embed_list[pg_num]
                 await reaction.message.edit(embed=embed)
             await reaction.remove(user)
         elif reaction.emoji == '▶️':
-            if serverEmotes.pg_num == len(serverEmotes.embedList) - 1:
+            if serverEmotes.pg_num == len(serverEmotes.embed_list) - 1:
                 serverEmotes.pg_num = 0
                 pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embedList[pg_num]
+                embed = serverEmotes.embed_list[pg_num]
                 await reaction.message.edit(embed=embed)
             else:
                 serverEmotes.pg_num += 1
                 pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embedList[pg_num]
+                embed = serverEmotes.embed_list[pg_num]
                 await reaction.message.edit(embed=embed)
             await reaction.remove(user)
 
-# @bot.event
-# async def on_message(message):
-#     if message.author == bot.user:
-#         return
-#     # emotes = re.findall(r"\<(.*?)\>", str(message.content))
-#     emotesId = re.findall(r"(\d+.)\>", str(message.content))
-#     print(emotesId)
-#     for id in emotesId:
-#         emotes = bot.get_emoji(int(id))
-#         if emotes != None:
-#             if emotes.animated:
-#                 (serverEmotes.animatedEmotes[emotes]) += 1
-#             else: 
-#                 (serverEmotes.regularEmotes[emotes]) += 1
-#         # for key in serverEmotes.animatedEmotes:
-#         #     if str(key.id) in emotes:
-#         #         occurrences = emotes.count(str(key.id))
-#         #         (serverEmotes.animatedEmotes[key]) += occurrences
-#         # for key in serverEmotes.regularEmotes:
-#         #     if str(key.id) in emotes:
-#         #         occurrences = emotes.count(str(key.id))
-#         #         (serverEmotes.regularEmotes[key]) += occurrences
-#     await bot.process_commands(message)
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    # emotes = re.findall(r"\<(.*?)\>", str(message.content))
+    emotesId = re.findall(r"(\d+.)\>", str(message.content))
+    for id in emotesId:
+        emotes = bot.get_emoji(int(id))
+        if emotes != None:
+            (serverEmotes.emotes_dict[int(id)]) += 1
+        # for key in serverEmotes.animatedEmotes:
+        #     if str(key.id) in emotes:
+        #         occurrences = emotes.count(str(key.id))
+        #         (serverEmotes.animatedEmotes[key]) += occurrences
+        # for key in serverEmotes.regularEmotes:
+        #     if str(key.id) in emotes:
+        #         occurrences = emotes.count(str(key.id))
+        #         (serverEmotes.regularEmotes[key]) += occurrences
+    await bot.process_commands(message)
 
 
 bot.run(TOKEN)

@@ -4,8 +4,8 @@ class EmojiClass():
     def __init__(self):
         # self.animatedEmotes = {}
         # self.regularEmotes = {}
-        self.emotesList = {}
-        self.embedList = []
+        self.emotes_dict = {}
+        self.embed_list = []
         self.top5AnimatedEmotes = {}
         self.top5RegularEmotes = {}
         self.pg_num = 0

@@ -19,31 +19,64 @@ async def on_ready():
 
 @bot.command(name='emotes')
 async def emotes(ctx):
-    if not ctx.guild.emojis:
+    list_of_emotes = ctx.guild.emojis
+    if not list_of_emotes:
         await ctx.send(f'Your server does not have any custom emotes!')
-    emojisList = ctx.guild.emojis
-    n_times = math.ceil(len(emojisList) / 20)
-    for x in range(n_times):
-        embed = discord.Embed(
-        title = "Emotes",
-        description = "",
-        colour = discord.Colour.blue()
-        )
-        pg_num = f'Page {x+1}/{n_times}'
-        embed.set_footer(text=pg_num)
-        serverEmotes.embedList.append(embed)
-    for emojis in emojisList:
-        serverEmotes.emotesList.update({bot.get_emoji(emojis.id): 0})
-    x = 0
-    for key, value in serverEmotes.emotesList.items():
-            i = math.floor(x/20)
-            emojis = bot.get_emoji(key.id)
-            message = f'{x+1}. {emojis}: {value}'
-            serverEmotes.embedList[i].add_field(name=emojis.name, value=message, inline=False)
-            x += 1
-    reactionMessage = await ctx.send(embed=serverEmotes.embedList[0])
-    await reactionMessage.add_reaction('◀️')
-    await reactionMessage.add_reaction('▶️')
+    elif len(serverEmotes.emotes_dict) != len(list_of_emotes) and len(serverEmotes.emotes_dict) != 0:
+        for key,value in serverEmotes.emotes_dict:
+            if key not in list_of_emotes:
+                del serverEmotes.emotes_dict[key]
+        for emojis in list_of_emotes:
+            emoji = bot.get_emoji(emojis.id)
+            if emoji not in serverEmotes.emotes_dict:
+                serverEmotes.emotes_dict.update({emoji: 0})
+        n_times = math.ceil(len(list_of_emotes) / 20)
+        for x in range(n_times):
+            embed = discord.Embed(
+            title = "Emotes",
+            description = "",
+            colour = discord.Colour.blue()
+            )
+            pg_num = f'Page {x+1}/{n_times}'
+            embed.set_footer(text=pg_num)
+            serverEmotes.embed_list.append(embed)
+        x = 0
+        for key, value in serverEmotes.emotes_dict.items():
+                index = math.floor(x/20)
+                emojis = bot.get_emoji(key.id)
+                message = f'{x+1}. {emojis}: {value}'
+                serverEmotes.embed_list[index].add_field(name=emojis.name, value=message, inline=False)
+                x += 1
+        reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
+        await reactionMessage.add_reaction('◀️')
+        await reactionMessage.add_reaction('▶️')
+    elif len(serverEmotes.emotes_dict) == len(list_of_emotes):
+        reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
+        await reactionMessage.add_reaction('◀️')
+        await reactionMessage.add_reaction('▶️')
+    else:
+        n_times = math.ceil(len(list_of_emotes) / 20)
+        for x in range(n_times):
+            embed = discord.Embed(
+            title = "Emotes",
+            description = "",
+            colour = discord.Colour.blue()
+            )
+            pg_num = f'Page {x+1}/{n_times}'
+            embed.set_footer(text=pg_num)
+            serverEmotes.embed_list.append(embed)
+        for emojis in list_of_emotes:
+            serverEmotes.emotes_dict.update({bot.get_emoji(emojis.id): 0})
+        x = 0
+        for key, value in serverEmotes.emotes_dict.items():
+                index = math.floor(x/20)
+                emojis = bot.get_emoji(key.id)
+                message = f'{x+1}. {emojis}: {value}'
+                serverEmotes.embed_list[index].add_field(name=emojis.name, value=message, inline=False)
+                x += 1
+        reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
+        await reactionMessage.add_reaction('◀️')
+        await reactionMessage.add_reaction('▶️')
     # await ctx.send_message(channel, embed=embed)
     # # elif serverEmotes.emotesSize == len(ctx.guild.emojis):
     # #     await ctx.send(serverEmotes.animatedEmotesMessage)

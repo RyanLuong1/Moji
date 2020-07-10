@@ -110,54 +110,6 @@ async def emotes(ctx):
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')
-    # await ctx.send_message(channel, embed=embed)
-    # # elif serverEmotes.emotesSize == len(ctx.guild.emojis):
-    # #     await ctx.send(serverEmotes.animatedEmotesMessage)
-    # #     await ctx.send(f'\u200b\n' + serverEmotes.regularEmotesMessage)
-    # elif serverEmotes.emotesAmt != len(ctx.guild.emojis) and serverEmotes.emotesAmt != 0:
-    #     dict1 = {}
-    #     dict2 = {}
-    #     for id in serverEmotes.animatedEmotes:
-    #         dict1.update( {id: serverEmotes.animatedEmotes[id]})
-    #     for id in serverEmotes.regularEmotes:
-    #         dict2.update( {id: serverEmotes.regularEmotes[id]})
-    #     messageForAnimated = f'```__***ANIMATED EMOTES:***__\n```'
-    #     messageForRegular = f'```__***EMOTES:***__\n```'
-    #     serverEmotes.resetEmotes()
-    #     for emoji in ctx.guild.emojis:
-    #         if emoji.animated:
-    #             serverEmotes.animatedEmotes.update( {bot.get_emoji(emoji.id): 0})
-    #             messageForAnimated += f'{emoji} ' + emoji.name + f'\n'  
-    #         else:
-    #             serverEmotes.regularEmotes.update( {bot.get_emoji(emoji.id): 0} )
-    #             messageForRegular += f'{emoji} ' + emoji.name + f'\n'
-    #     for id in dict1:
-    #         if id in serverEmotes.animatedEmotes:
-    #             serverEmotes.animatedEmotes.update( {id: dict1[id]})
-    #     for id in dict2:
-    #         if id in serverEmotes.regularEmotes:
-    #             serverEmotes.regularEmotes.update( {id: dict2[id]})
-    #     serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regularEmotes)
-    #     await ctx.send(f'All emotes have been collected. All emotes will be display soon!')
-    #     await asyncio.sleep(5)
-    #     await ctx.send(messageForAnimated)
-    #     await ctx.send(f'\u200b\n' + messageForRegular)
-    # else:
-    #     serverEmotes.resetEmotes()
-    #     messageForAnimated = f'```__***ANIMATED EMOTES:***__\n```'
-    #     messageForRegular = f'```__***EMOTES:***__\n```'
-    #     for emoji in ctx.guild.emojis:
-    #         if emoji.animated:
-    #             serverEmotes.animatedEmotes.update( {bot.get_emoji(emoji.id): 0})
-    #             messageForAnimated += f'{emoji} ' + emoji.name + f'\n'
-    #         else:
-    #             serverEmotes.regularEmotes.update( {bot.get_emoji(emoji.id): 0} )
-    #             messageForRegular += f'{emoji} ' + emoji.name + f'\n'   
-    #         serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regularEmotes)
-    #     await ctx.send(f'All emotes have been collected. All emotes will be display soon!')
-    #     # await asyncio.sleep(5)
-    #     await ctx.send(messageForAnimated)
-    #     await ctx.send(f'\u200b\n' + messageForRegular)
 
 @bot.event
 async def on_reaction_add(reaction, user):
@@ -202,14 +154,6 @@ async def on_message(message):
         emoji = bot.get_emoji(int(id))
         if emoji != None:
             (serverEmotes.emojis_dict[int(id)]) += 1
-        # for id in serverEmotes.animatedEmotes:
-        #     if str(id.id) in emotes:
-        #         occurrences = emotes.count(str(id.id))
-        #         (serverEmotes.animatedEmotes[id]) += occurrences
-        # for id in serverEmotes.regularEmotes:
-        #     if str(id.id) in emotes:
-        #         occurrences = emotes.count(str(id.id))
-        #         (serverEmotes.regularEmotes[id]) += occurrences
     await bot.process_commands(message)
 
 

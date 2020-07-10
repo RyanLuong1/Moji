@@ -27,16 +27,16 @@ async def emotes(ctx):
         await ctx.send(f'Your server does not have any custom emotes!')
     elif len(serverEmotes.emojis_dict) != len(list_of_emojis) and len(serverEmotes.emojis_dict) != 0:
         list_of_removed_emojis = []
-        for key,value in serverEmotes.emojis_dict.items():
-            emoji = bot.get_emoji(key)
+        for id in serverEmotes.emojis_dict:
+            emoji = bot.get_emoji(id)
             if emoji == None:
-                list_of_removed_emojis.append(key)
+                list_of_removed_emojis.append(id)
         if list_of_removed_emojis:
             for id in list_of_removed_emojis:
                 del serverEmotes.emojis_dict[id]
         for emoji in list_of_emojis:
-            value = serverEmotes.emojis_dict.get(emoji.id, -1)
-            if value == -1:
+            count = serverEmotes.emojis_dict.get(emoji.id, -1)
+            if count == -1:
                 serverEmotes.emojis_dict.update({emoji.id: 0})
         serverEmotes.embed_list.clear()
         n_times = math.ceil(len(list_of_emojis) / 20)
@@ -51,10 +51,10 @@ async def emotes(ctx):
             serverEmotes.embed_list.append(embed)
         x = 0
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (x[1], x[0]), reverse=True))
-        for key, value in sorted_emotes.items():
+        for id, count in sorted_emotes.items():
                 index = math.floor(x/20)
-                emoji = bot.get_emoji(key)
-                message = f'{x+1}. {emoji}: {value}'
+                emoji = bot.get_emoji(id)
+                message = f'{x+1}. {emoji}: {count}'
                 serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
                 x += 1
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
@@ -62,25 +62,25 @@ async def emotes(ctx):
         await reactionMessage.add_reaction('▶️')
     elif len(serverEmotes.emojis_dict) == len(list_of_emojis):
         list_of_removed_emojis = []
-        for key,value in serverEmotes.emojis_dict.items():
-            emoji = bot.get_emoji(key)
+        for id in serverEmotes.emojis_dict:
+            emoji = bot.get_emoji(id)
             if emoji == None:
-                list_of_removed_emojis.append(key)
+                list_of_removed_emojis.append(id)
         if list_of_removed_emojis:
             for id in list_of_removed_emojis:
                 del serverEmotes.emojis_dict[id]
         for emoji in list_of_emojis:
-            value = serverEmotes.emojis_dict.get(emoji.id, -1)
-            if value == -1:
+            count = serverEmotes.emojis_dict.get(emoji.id, -1)
+            if count == -1:
                 serverEmotes.emojis_dict.update({emoji.id: 0})
         for embeds in serverEmotes.embed_list:
             embeds.clear_fields()
         x = 0
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (x[1], x[0]), reverse=True))
-        for key, value in sorted_emotes.items():
+        for id, count in sorted_emotes.items():
             index = math.floor(x/20)
-            emoji = bot.get_emoji(key)
-            message = f'{x+1}. {emoji}: {value}'
+            emoji = bot.get_emoji(id)
+            message = f'{x+1}. {emoji}: {count}'
             serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
             x += 1
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0]) 
@@ -101,10 +101,10 @@ async def emotes(ctx):
             serverEmotes.emojis_dict.update({emoji.id: 0})
         x = 0
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (x[1], x[0]), reverse=True))
-        for key, value in sorted_emotes.items():
+        for id, count in sorted_emotes.items():
                 index = math.floor(x/20)
-                emoji = bot.get_emoji(key)
-                message = f'{x+1}. {emoji}: {value}'
+                emoji = bot.get_emoji(id)
+                message = f'{x+1}. {emoji}: {count}'
                 serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
                 x += 1
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
@@ -117,10 +117,10 @@ async def emotes(ctx):
     # elif serverEmotes.emotesAmt != len(ctx.guild.emojis) and serverEmotes.emotesAmt != 0:
     #     dict1 = {}
     #     dict2 = {}
-    #     for key in serverEmotes.animatedEmotes:
-    #         dict1.update( {key: serverEmotes.animatedEmotes[key]})
-    #     for key in serverEmotes.regularEmotes:
-    #         dict2.update( {key: serverEmotes.regularEmotes[key]})
+    #     for id in serverEmotes.animatedEmotes:
+    #         dict1.update( {id: serverEmotes.animatedEmotes[id]})
+    #     for id in serverEmotes.regularEmotes:
+    #         dict2.update( {id: serverEmotes.regularEmotes[id]})
     #     messageForAnimated = f'```__***ANIMATED EMOTES:***__\n```'
     #     messageForRegular = f'```__***EMOTES:***__\n```'
     #     serverEmotes.resetEmotes()
@@ -131,12 +131,12 @@ async def emotes(ctx):
     #         else:
     #             serverEmotes.regularEmotes.update( {bot.get_emoji(emoji.id): 0} )
     #             messageForRegular += f'{emoji} ' + emoji.name + f'\n'
-    #     for key in dict1:
-    #         if key in serverEmotes.animatedEmotes:
-    #             serverEmotes.animatedEmotes.update( {key: dict1[key]})
-    #     for key in dict2:
-    #         if key in serverEmotes.regularEmotes:
-    #             serverEmotes.regularEmotes.update( {key: dict2[key]})
+    #     for id in dict1:
+    #         if id in serverEmotes.animatedEmotes:
+    #             serverEmotes.animatedEmotes.update( {id: dict1[id]})
+    #     for id in dict2:
+    #         if id in serverEmotes.regularEmotes:
+    #             serverEmotes.regularEmotes.update( {id: dict2[id]})
     #     serverEmotes.emotesAmt = len(serverEmotes.animatedEmotes) + len(serverEmotes.regularEmotes)
     #     await ctx.send(f'All emotes have been collected. All emotes will be display soon!')
     #     await asyncio.sleep(5)
@@ -202,14 +202,14 @@ async def on_message(message):
         emoji = bot.get_emoji(int(id))
         if emoji != None:
             (serverEmotes.emojis_dict[int(id)]) += 1
-        # for key in serverEmotes.animatedEmotes:
-        #     if str(key.id) in emotes:
-        #         occurrences = emotes.count(str(key.id))
-        #         (serverEmotes.animatedEmotes[key]) += occurrences
-        # for key in serverEmotes.regularEmotes:
-        #     if str(key.id) in emotes:
-        #         occurrences = emotes.count(str(key.id))
-        #         (serverEmotes.regularEmotes[key]) += occurrences
+        # for id in serverEmotes.animatedEmotes:
+        #     if str(id.id) in emotes:
+        #         occurrences = emotes.count(str(id.id))
+        #         (serverEmotes.animatedEmotes[id]) += occurrences
+        # for id in serverEmotes.regularEmotes:
+        #     if str(id.id) in emotes:
+        #         occurrences = emotes.count(str(id.id))
+        #         (serverEmotes.regularEmotes[id]) += occurrences
     await bot.process_commands(message)
 
 

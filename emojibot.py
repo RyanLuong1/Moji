@@ -115,31 +115,42 @@ async def emotes(ctx):
 async def on_reaction_add(reaction, user):
     if user.bot:
         return
-    if reaction.message.embeds[0].title == "Emotes":
-        if reaction.emoji == '◀️':
-            if serverEmotes.pg_num == 0:
-                serverEmotes.pg_num = len(serverEmotes.embed_list) - 1
-                pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embed_list[pg_num]
-                await reaction.message.edit(embed=embed)
+    if not reaction.message.embeds:
+        id = reaction.emoji.id
+        count = serverEmotes.emojis_dict.get(id, -1)
+        if count != -1:
+            (serverEmotes.emojis_dict[id]) += 1
+    else:
+        if reaction.message.embeds[0].title == "Emotes":
+            if reaction.emoji == '◀️':
+                if serverEmotes.pg_num == 0:
+                    serverEmotes.pg_num = len(serverEmotes.embed_list) - 1
+                    pg_num = serverEmotes.pg_num
+                    embed = serverEmotes.embed_list[pg_num]
+                    await reaction.message.edit(embed=embed)
+                else:
+                    serverEmotes.pg_num -= 1
+                    pg_num = serverEmotes.pg_num
+                    embed = serverEmotes.embed_list[pg_num]
+                    await reaction.message.edit(embed=embed)
+                await reaction.remove(user)
+            elif reaction.emoji == '▶️':
+                if serverEmotes.pg_num == len(serverEmotes.embed_list) - 1:
+                    serverEmotes.pg_num = 0
+                    pg_num = serverEmotes.pg_num
+                    embed = serverEmotes.embed_list[pg_num]
+                    await reaction.message.edit(embed=embed)
+                else:
+                    serverEmotes.pg_num += 1
+                    pg_num = serverEmotes.pg_num
+                    embed = serverEmotes.embed_list[pg_num]
+                    await reaction.message.edit(embed=embed)
+                await reaction.remove(user)
             else:
-                serverEmotes.pg_num -= 1
-                pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embed_list[pg_num]
-                await reaction.message.edit(embed=embed)
-            await reaction.remove(user)
-        elif reaction.emoji == '▶️':
-            if serverEmotes.pg_num == len(serverEmotes.embed_list) - 1:
-                serverEmotes.pg_num = 0
-                pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embed_list[pg_num]
-                await reaction.message.edit(embed=embed)
-            else:
-                serverEmotes.pg_num += 1
-                pg_num = serverEmotes.pg_num
-                embed = serverEmotes.embed_list[pg_num]
-                await reaction.message.edit(embed=embed)
-            await reaction.remove(user)
+                id = reaction.emoji.id
+                count = serverEmotes.emojis_dict.get(id, -1)
+                if count != -1:
+                    (serverEmotes.emojis_dict[id]) += 1
 
 """
 Discord bots write emotes as <:name_of_emotes:#>. 

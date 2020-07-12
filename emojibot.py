@@ -11,7 +11,6 @@ load_dotenv()
 
 #TODO: Setup database
 #TODO: Clean the code
-#TODO: Try to sort emojis with the same value using the name instead of their respective ids
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 serverEmotes = EmojiClass()
@@ -25,6 +24,7 @@ async def on_ready():
 """
 (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
 (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
+Sorting the emojis by count descendingly then by name ascendingly makes the list look ordered
 """
 
 @bot.command(name='emotes')
@@ -160,8 +160,9 @@ async def on_reaction_add(reaction, user):
                     (serverEmotes.emojis_dict[id]) += 1
 
 """
-Discord bots write emotes as <:name_of_emotes:#>. 
-finall gets all the strings from the message that follow this pattern, #>, and then removing > at the end.
+Discord bots write emotes as <:name_of_emotes:#>.
+Parsing the message to get the emojis ids is a preferable way. 
+Find the emojis ids by using the following pattern, a group of numbers that ends with a >.
 """
 @bot.event
 async def on_message(message):

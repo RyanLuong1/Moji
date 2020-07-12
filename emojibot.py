@@ -9,7 +9,9 @@ from discord.ext import commands
 from emojibotclass import EmojiClass
 load_dotenv()
 
-#TODO: Make reactions count towards the emotes
+#TODO: Setup database
+#TODO: Clean the code
+#TODO: Try to sort emojis with the same value using the name instead of their respective ids
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 serverEmotes = EmojiClass()
@@ -19,6 +21,11 @@ bot = commands.Bot(command_prefix = '!')
 @bot.event
 async def on_ready():
     await bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
+
+"""
+(bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
+(-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
+"""
 
 @bot.command(name='emotes')
 async def emotes(ctx):
@@ -50,7 +57,7 @@ async def emotes(ctx):
             embed.set_footer(text=pg_num)
             serverEmotes.embed_list.append(embed)
         x = 0
-        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (x[1], x[0]), reverse=True))
+        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name)).lower()))
         for id, count in sorted_emotes.items():
                 index = math.floor(x/20)
                 emoji = bot.get_emoji(id)
@@ -76,7 +83,7 @@ async def emotes(ctx):
         for embeds in serverEmotes.embed_list:
             embeds.clear_fields()
         x = 0
-        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (x[1], x[0]), reverse=True))
+        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name).lower())))
         for id, count in sorted_emotes.items():
             index = math.floor(x/20)
             emoji = bot.get_emoji(id)
@@ -100,7 +107,7 @@ async def emotes(ctx):
         for emoji in list_of_emojis:
             serverEmotes.emojis_dict.update({emoji.id: 0})
         x = 0
-        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (x[1], x[0]), reverse=True))
+        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (bot.get_emoji(x[0]).name).lower()))
         for id, count in sorted_emotes.items():
                 index = math.floor(x/20)
                 emoji = bot.get_emoji(id)

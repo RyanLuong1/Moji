@@ -47,7 +47,7 @@ async def emotes(ctx):
             if count == -1:
                 serverEmotes.emojis_dict.update({emoji.id: 0})
         serverEmotes.embed_list.clear()
-        n_times = math.ceil(len(list_of_emojis) / 20)
+        n_times = math.ceil(len(list_of_emojis) / 10)
         for x in range(n_times):
             embed = discord.Embed(
             title = "Emotes",
@@ -60,7 +60,7 @@ async def emotes(ctx):
         x = 0
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name)).lower()))
         for id, count in sorted_emotes.items():
-                index = math.floor(x/20)
+                index = math.floor(x/10)
                 emoji = bot.get_emoji(id)
                 message = f'{x+1}. {emoji}: {count}'
                 serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
@@ -86,7 +86,7 @@ async def emotes(ctx):
         x = 0
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name).lower())))
         for id, count in sorted_emotes.items():
-            index = math.floor(x/20)
+            index = math.floor(x/10)
             emoji = bot.get_emoji(id)
             message = f'{x+1}. {emoji}: {count}'
             serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
@@ -95,7 +95,7 @@ async def emotes(ctx):
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')
     else:
-        n_times = math.ceil(len(list_of_emojis) / 20)
+        n_times = math.ceil(len(list_of_emojis) / 10)
         for x in range(n_times):
             embed = discord.Embed(
             title = "Emotes",
@@ -108,9 +108,10 @@ async def emotes(ctx):
         for emoji in list_of_emojis:
             serverEmotes.emojis_dict.update({emoji.id: 0})
         x = 0
+        total = serverEmotes.total
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (bot.get_emoji(x[0]).name).lower()))
         for id, count in sorted_emotes.items():
-                index = math.floor(x/20)
+                index = math.floor(x/10)
                 emoji = bot.get_emoji(id)
                 message = f'{x+1}. {emoji}: {count}'
                 serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)

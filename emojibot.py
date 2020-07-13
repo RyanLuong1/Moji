@@ -11,6 +11,7 @@ load_dotenv()
 
 #TODO: Setup database
 #TODO: Clean the code
+#TODO: Get the percentage per page
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 serverEmotes = EmojiClass()

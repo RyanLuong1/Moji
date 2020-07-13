@@ -174,6 +174,7 @@ async def on_message(message):
         emoji = bot.get_emoji(int(id))
         if emoji != None:
             (serverEmotes.emojis_dict[int(id)]) += 1
+            serverEmotes.total += 1
     await bot.process_commands(message)
 
 

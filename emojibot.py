@@ -84,10 +84,13 @@ async def emotes(ctx):
         for embeds in serverEmotes.embed_list:
             embeds.clear_fields()
         x = 0
+        parts = 0
+        total = serverEmotes.total
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name).lower())))
         for id, count in sorted_emotes.items():
             index = math.floor(x/10)
             emoji = bot.get_emoji(id)
+            parts += count
             message = f'{x+1}. {emoji}: {count}'
             serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
             x += 1
@@ -108,7 +111,6 @@ async def emotes(ctx):
         for emoji in list_of_emojis:
             serverEmotes.emojis_dict.update({emoji.id: 0})
         x = 0
-        total = serverEmotes.total
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (bot.get_emoji(x[0]).name).lower()))
         for id, count in sorted_emotes.items():
                 index = math.floor(x/10)
@@ -116,6 +118,11 @@ async def emotes(ctx):
                 message = f'{x+1}. {emoji}: {count}'
                 serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
                 x += 1
+        embed_list_size = len(serverEmotes.embed_list)
+        total = serverEmotes.total
+        activity = 0
+        for x in range(embed_list_size):
+            serverEmotes.embed_list[x].description = f'Total Count: {total}\n Usage Activity: 0 ({0}%)'
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')

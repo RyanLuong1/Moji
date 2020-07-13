@@ -47,14 +47,14 @@ async def emotes(ctx):
             if count == -1:
                 serverEmotes.emojis_dict.update({emoji.id: 0})
         serverEmotes.embed_list.clear()
-        n_times = math.ceil(len(list_of_emojis) / 10)
-        for x in range(n_times):
+        n = math.ceil(len(list_of_emojis) / 10)
+        for x in range(n):
             embed = discord.Embed(
             title = "Emotes",
             description = "",
             colour = discord.Colour.blue()
             )
-            pg_num = f'Page {x+1}/{n_times}'
+            pg_num = f'Page {x+1}/{n}'
             embed.set_footer(text=pg_num)
             serverEmotes.embed_list.append(embed)
         x = 0
@@ -84,28 +84,38 @@ async def emotes(ctx):
         for embeds in serverEmotes.embed_list:
             embeds.clear_fields()
         x = 0
-        parts = 0
-        total = serverEmotes.total
+        usage_list = []
+        usage = 0
         sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name).lower())))
         for id, count in sorted_emotes.items():
             index = math.floor(x/10)
             emoji = bot.get_emoji(id)
-            parts += count
+            usage += count
             message = f'{x+1}. {emoji}: {count}'
             serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
             x += 1
+            if x % 10 == 0:
+                usage_list.append(usage)
+                usage = 0
+        usage = 0
+        n = len(usage_list)
+        total = serverEmotes.total
+        for x in range(n):
+            usage = usage_list[x]
+            usage_activity = (usage / total) * 100
+            serverEmotes.embed_list[x].description = f'Total Count: {total} \n Usage Activity: {usage}/{total} ({usage_activity: .2f})%' 
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0]) 
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')
     else:
-        n_times = math.ceil(len(list_of_emojis) / 10)
-        for x in range(n_times):
+        n = math.ceil(len(list_of_emojis) / 10)
+        for x in range(n):
             embed = discord.Embed(
             title = "Emotes",
             description = "",
             colour = discord.Colour.blue()
             )
-            pg_num = f'Page {x+1}/{n_times}'
+            pg_num = f'Page {x+1}/{n}'
             embed.set_footer(text=pg_num)
             serverEmotes.embed_list.append(embed)
         for emoji in list_of_emojis:
@@ -118,10 +128,10 @@ async def emotes(ctx):
                 message = f'{x+1}. {emoji}: {count}'
                 serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
                 x += 1
-        embed_list_size = len(serverEmotes.embed_list)
+        n = len(serverEmotes.embed_list)
         total = serverEmotes.total
         activity = 0
-        for x in range(embed_list_size):
+        for x in range(n):
             serverEmotes.embed_list[x].description = f'Total Count: {total}\n Usage Activity: 0 ({0}%)'
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
         await reactionMessage.add_reaction('◀️')

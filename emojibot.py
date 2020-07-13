@@ -41,6 +41,8 @@ async def emotes(ctx):
                 list_of_removed_emojis.append(id)
         if list_of_removed_emojis:
             for id in list_of_removed_emojis:
+                count = serverEmotes.emojis_dict.get(id)
+                serverEmotes.total -= count
                 del serverEmotes.emojis_dict[id]
         for emoji in list_of_emojis:
             count = serverEmotes.emojis_dict.get(emoji.id, -1)
@@ -58,13 +60,26 @@ async def emotes(ctx):
             embed.set_footer(text=pg_num)
             serverEmotes.embed_list.append(embed)
         x = 0
-        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name)).lower()))
+        usage_list = []
+        usage = 0
+        sorted_emotes = OrderedDict(sorted(serverEmotes.emojis_dict.items(), key=lambda x: (-x[1], (bot.get_emoji(x[0]).name).lower())))
         for id, count in sorted_emotes.items():
                 index = math.floor(x/10)
                 emoji = bot.get_emoji(id)
+                usage += count
                 message = f'{x+1}. {emoji}: {count}'
                 serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
                 x += 1
+                if x % 10 == 0:
+                    usage_list.append(usage)
+                    usage = 0
+        usage = 0
+        n = len(usage_list)
+        total = serverEmotes.total
+        for x in range(n):
+            usage = usage_list[x]
+            usage_activity = (usage / total) * 100
+            serverEmotes.embed_list[x].description = f'Total Count: {total} \n Usage Activity: {usage}/{total} ({usage_activity: .2f}%)'
         reactionMessage = await ctx.send(embed=serverEmotes.embed_list[0])
         await reactionMessage.add_reaction('◀️')
         await reactionMessage.add_reaction('▶️')

@@ -162,6 +162,7 @@ async def on_reaction_add(reaction, user):
         count = serverEmotes.emojis_dict.get(id, -1)
         if count != -1:
             (serverEmotes.emojis_dict[id]) += 1
+            serverEmotes.total += 1
     else:
         if reaction.message.embeds[0].title == "Emotes":
             if reaction.emoji == '◀️':
@@ -193,6 +194,7 @@ async def on_reaction_add(reaction, user):
                 count = serverEmotes.emojis_dict.get(id, -1)
                 if count != -1:
                     (serverEmotes.emojis_dict[id]) += 1
+                    serverEmotes.total += 1
 
 """
 Discord bots write emotes as <:name_of_emotes:#>.

@@ -60,12 +60,14 @@ class EmoteCommand(commands.Cog):
                     if x % 10 == 0:
                         usage_list.append(usage)
                         usage = 0
-            usage = 0
             n = len(usage_list)
             total = self.serverEmotes.total
             for x in range(n):
                 usage = usage_list[x]
-                usage_activity = (usage / total) * 100
+                try:
+                    usage_activity = (usage / total) * 100
+                except ZeroDivisionError:
+                    usage_activity = usage
                 self.serverEmotes.embed_list[x].description = f'Total Count: {total} \n Usage Activity: {usage}/{total} ({usage_activity: .2f}%)'
             reactionMessage = await ctx.send(embed=self.serverEmotes.embed_list[0])
             await reactionMessage.add_reaction('◀️')
@@ -99,12 +101,14 @@ class EmoteCommand(commands.Cog):
                 if x % 10 == 0:
                     usage_list.append(usage)
                     usage = 0
-            usage = 0
             n = len(usage_list)
             total = self.serverEmotes.total
             for x in range(n):
                 usage = usage_list[x]
-                usage_activity = (usage / total) * 100
+                try:
+                    usage_activity = (usage / total) * 100
+                except ZeroDivisionError:
+                    usage_activity = usage
                 self.serverEmotes.embed_list[x].description = f'Total Count: {total} \n Usage Activity: {usage}/{total} ({usage_activity: .2f}%)' 
             reactionMessage = await ctx.send(embed=self.serverEmotes.embed_list[0]) 
             await reactionMessage.add_reaction('◀️')
@@ -135,7 +139,7 @@ class EmoteCommand(commands.Cog):
             usage = 0
             usage_activity = 0
             for x in range(n):
-                self.serverEmotes.embed_list[x].description = f'Total Count: {total}\n Usage Activity: {usage}/{total} ({usage: .2f}%)'
+                self.serverEmotes.embed_list[x].description = f'Total Count: {total}\n Usage Activity: {usage}/{total} ({usage_activity: .2f}%)'
             reactionMessage = await ctx.send(embed=self.serverEmotes.embed_list[0])
             await reactionMessage.add_reaction('◀️')
             await reactionMessage.add_reaction('▶️')

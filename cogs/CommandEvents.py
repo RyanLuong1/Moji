@@ -9,7 +9,7 @@ class CommandEvents(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if user.self.bot:
+        if self.bot.user:
             return
         if not reaction.message.embeds:
             id = reaction.emoji.id

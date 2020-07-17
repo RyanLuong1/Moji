@@ -30,10 +30,17 @@ class EmoteCommand(commands.Cog):
         if not list_of_emojis:
             await ctx.send(f'Your server does not have any custom emotes!')
         else:
-            print('thius')
             for emoji in list_of_emojis:
-                entry = {"id": emoji.id, "count": 0}
-                collection.insert_one(entry)
+                query = {"_id": emoji.id}
+                if (collection.count_documents(query) == 0):
+                    entry = {"_id": emoji.id, "count": 0}
+                    collection.insert_one(entry)
+                # else:
+                #     entries = collection.find(query)
+                #     for entry in entries:
+                #         count = entry["count"]
+                #     count += 1
+                #     collection.update_one({"_id": emoji.id}, {"$set":{"count": count}})
         # elif collection_size != len(list_of_emojis) and collection_size != 0:
         #     list_of_removed_emojis = []
         #     for id in self.serverEmotes.emojis_dict:

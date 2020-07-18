@@ -18,6 +18,11 @@ class EmoteCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def insert_emojis_to_database(emoji_id):
+        query = {"_id": emoji_id}
+        if (collection.count_documents(query) == 0):
+                entry = {"_id": emoji_id, "count": 0}
+                collection.insert_one(entry)
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -31,10 +36,7 @@ class EmoteCommand(commands.Cog):
             await ctx.send(f'Your server does not have any custom emotes!')
         else:
             for emoji in list_of_emojis:
-                query = {"_id": emoji.id}
-                if (collection.count_documents(query) == 0):
-                    entry = {"_id": emoji.id, "count": 0}
-                    collection.insert_one(entry)
+                EmoteCommand.insert_emojis_to_database(emoji.id)
                 # else:
                 #     entries = collection.find(query)
                 #     for entry in entries:

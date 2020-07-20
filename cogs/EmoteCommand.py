@@ -44,7 +44,10 @@ class EmoteCommand(commands.Cog):
                     id = values["_id"]
                     count = values["count"]
                 emojis_dict.update({id: count})
+            sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
             
+            # for key, value in sorted_emotes.items():
+            #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:
                 #     entries = collection.find(query)
                 #     for entry in entries:

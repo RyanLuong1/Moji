@@ -43,7 +43,8 @@ class EmoteCommand(commands.Cog):
                 for values in field:
                     id = values["_id"]
                     count = values["count"]
-                    await ctx.send(f'{id} {count}')
+                emojis_dict.update({id: count})
+            
                 # else:
                 #     entries = collection.find(query)
                 #     for entry in entries:

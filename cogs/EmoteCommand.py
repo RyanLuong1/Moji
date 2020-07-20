@@ -37,6 +37,13 @@ class EmoteCommand(commands.Cog):
         else:
             for emoji in list_of_emojis:
                 EmoteCommand.insert_emojis_to_database(emoji.id)
+            emojis_dict = {}
+            for emoji in list_of_emojis:
+                field = collection.find({"_id": emoji.id}, {"count": 1})
+                for values in field:
+                    id = values["_id"]
+                    count = values["count"]
+                    await ctx.send(f'{id} {count}')
                 # else:
                 #     entries = collection.find(query)
                 #     for entry in entries:

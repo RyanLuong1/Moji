@@ -81,10 +81,10 @@ class EmoteCommand(commands.Cog):
                 usage_activity = values["usage_activity"]
             embed = discord.Embed(
                 title = "Emotes",
-                description = f'{usage_activity}',
+                description = f'Total: {total}\n Usage Activity: {usage_activity}',
                 colour = discord.Colour.blue(),
-                footer = f'{pg_num}/{n}'
             )
+            embed.set_footer(text=f'Page: {pg_num}/{n}')
             n = len(emojis_list)
             for i in range(n):
                 emoji = self.bot.get_emoji(emojis_list[i])

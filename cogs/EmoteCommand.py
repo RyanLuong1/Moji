@@ -50,12 +50,13 @@ class EmoteCommand(commands.Cog):
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens = [[] for i in range(n)]
-            print(sorted_emotes_in_tens)
             for key, value in sorted_emotes.items():
                 index = math.floor(x/10)
                 sorted_emotes_in_tens[index].append(key)
                 x += 1   
-            
+            for i in range(n):
+                pg_num = i + 1;
+                collection.insert_one({"pg_num": pg_num, "sorted_emotes": sorted_emotes_in_tens[i]})
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

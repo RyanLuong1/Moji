@@ -77,21 +77,20 @@ class EmoteCommand(commands.Cog):
             for values in first_pg_message:
                 pg_num = values["pg_num"]
                 emojis_list = values["sorted_emotes"]
+                emojis_value_list = values["sorted_emotes_values"]
                 usage_activity = values["usage_activity"]
             embed = discord.Embed(
                 title = "Emotes",
-                description = usage_activity,
+                description = f'{usage_activity}',
                 colour = discord.Colour.blue(),
                 footer = f'{pg_num}/{n}'
             )
-            first_pg_message = collection.find({"pg_num": 1}, {"_id": 0})
-            for values in first_pg_message:
-                pg_num = values["pg_num"]
-                emojis_list = values["sorted_emotes"]
-                usage_activity = values["usage_activity"]
-            # for id in emojis_list:
-            #     emoji = self.bot.get_emoji(id)
-            #     embed.add_field(name= emoji.name,)
+            n = len(emojis_list)
+            for i in range(n):
+                emoji = self.bot.get_emoji(emojis_list[i])
+                count = emojis_value_list[i]
+                embed.add_field(name=emoji.name, value=f'{1+i}. {emoji}: {count}', inline=False)
+            await ctx.send(embed=embed)
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

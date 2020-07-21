@@ -50,13 +50,20 @@ class EmoteCommand(commands.Cog):
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens = [[] for i in range(n)]
+            usage_list = [0 for i in range(n)]
             for key, value in sorted_emotes.items():
                 index = math.floor(x/10)
                 sorted_emotes_in_tens[index].append(key)
-                x += 1   
+                usage_list[index] += value
+                x += 1
+            total = len(list_of_emojis)   
             for i in range(n):
+                try:
+                    usage_activity = usage_list[i] / total
+                except ZeroDivisionError:
+                    usage_activity = 0
                 pg_num = i + 1;
-                collection.insert_one({"pg_num": pg_num, "sorted_emotes": sorted_emotes_in_tens[i]})
+                collection.insert_one({"pg_num": pg_num, "sorted_emotes": sorted_emotes_in_tens[i], "usage": f'({usage_activity: .2f}%)'})
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

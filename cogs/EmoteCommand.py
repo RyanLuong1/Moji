@@ -14,6 +14,8 @@ cluster = MongoClient(mongo_url)
 db = cluster['emotes']
 collection = db['emotes']
 
+#TODO: Emotes are inserted 0-8 instead of 0-9
+
 class EmoteCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -47,16 +49,13 @@ class EmoteCommand(commands.Cog):
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
-            sorted_emotes_in_tens = []
-            for key, value in sorted_emotes.items():   
-                if (x % 10 == 0 and x is not 0):
-                    pg = x / 10
-                    print(f'{x} {pg}')
-                    collection.insert_one({"page": pg, "sorted": sorted_emotes_in_tens})
-                    sorted_emotes_in_tens.clear()
-                else:
-                    sorted_emotes_in_tens.append(key)
-                x += 1
+            sorted_emotes_in_tens = [[] for i in range(n)]
+            print(sorted_emotes_in_tens)
+            for key, value in sorted_emotes.items():
+                index = math.floor(x/10)
+                sorted_emotes_in_tens[index].append(key)
+                x += 1   
+            
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

@@ -36,7 +36,11 @@ class EmoteCommand(commands.Cog):
 
     @commands.command(name="reset")
     async def reset(self, ctx):
-        EmoteCommand.reset_database()
+        if (ctx.message.author.id == 168194032600743936):
+            EmoteCommand.reset_database()
+            await ctx.send("Database reset!")
+        else:
+            await ctx.send("Sorry! Only Ryan has access to it")
 
     @commands.command(name='emotes')
     async def emotes(self ,ctx):

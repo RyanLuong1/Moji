@@ -90,7 +90,10 @@ class EmoteCommand(commands.Cog):
                 emoji = self.bot.get_emoji(emojis_list[i])
                 count = emojis_value_list[i]
                 embed.add_field(name=emoji.name, value=f'{1+i}. {emoji}: {count}', inline=False)
-            await ctx.send(embed=embed)
+            reaction_message = await ctx.send(embed=embed)
+            await reaction_message.add_reaction('◀️')
+            await reaction_message.add_reaction('▶️')
+
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

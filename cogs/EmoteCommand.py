@@ -62,8 +62,15 @@ class EmoteCommand(commands.Cog):
                     usage_activity = usage_list[i] / total
                 except ZeroDivisionError:
                     usage_activity = 0
-                pg_num = i + 1;
-                collection.insert_one({"pg_num": pg_num, "sorted_emotes": sorted_emotes_in_tens[i], "usage": f'({usage_activity: .2f}%)'})
+                pg_num = i + 1
+                fraction = f'{usage_list[i]}/{total}'
+                collection.insert_one({"pg_num": pg_num, "sorted_emotes": sorted_emotes_in_tens[i], "usage": f'{fraction} ({usage_activity: .2f}%)'})
+            embed = discord.Embed(
+                title = "Emotes",
+                description = "",
+                colour = discord.Colour.blue()
+            )
+
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

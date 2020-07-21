@@ -34,6 +34,10 @@ class EmoteCommand(commands.Cog):
     Sorting the emojis by count descendingly then by name ascendingly makes the list look ordered
     """
 
+    @commands.command(name="reset")
+    async def reset(self, ctx):
+        EmoteCommand.reset_database()
+
     @commands.command(name='emotes')
     async def emotes(self ,ctx):
         list_of_emojis = ctx.guild.emojis

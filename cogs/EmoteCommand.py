@@ -20,6 +20,9 @@ class EmoteCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def reset_database():
+        collection.remove({})
+
     def insert_emojis_to_database(emoji_id):
         query = {"_id": emoji_id}
         if (collection.count_documents(query) == 0):
@@ -70,7 +73,7 @@ class EmoteCommand(commands.Cog):
                 description = "",
                 colour = discord.Colour.blue()
             )
-
+            EmoteCommand.reset_database()
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

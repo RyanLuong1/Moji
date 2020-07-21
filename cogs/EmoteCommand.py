@@ -53,10 +53,12 @@ class EmoteCommand(commands.Cog):
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens = [[] for i in range(n)]
+            sorted_emotes_values_in_tens = [[] for i in range(n)]
             usage_list = [0 for i in range(n)]
             for key, value in sorted_emotes.items():
                 index = math.floor(x/10)
                 sorted_emotes_in_tens[index].append(key)
+                sorted_emotes_values_in_tens[index].append(value)
                 usage_list[index] += value
                 x += 1
             total = len(list_of_emojis)   
@@ -67,13 +69,29 @@ class EmoteCommand(commands.Cog):
                     usage_activity = 0
                 pg_num = i + 1
                 fraction = f'{usage_list[i]}/{total}'
-                collection.insert_one({"pg_num": pg_num, "sorted_emotes": sorted_emotes_in_tens[i], "usage": f'{fraction} ({usage_activity: .2f}%)'})
+                collection.insert_one({"pg_num": pg_num,
+                                        "sorted_emotes": sorted_emotes_in_tens[i],
+                                        "sorted_emotes_values": sorted_emotes_values_in_tens[i],
+                                        "usage_activity": f'{fraction} ({usage_activity: .2f}%)'})
+            first_pg_message = collection.find({"pg_num": 1}, {"_id": 0})
+            for values in first_pg_message:
+                pg_num = values["pg_num"]
+                emojis_list = values["sorted_emotes"]
+                usage_activity = values["usage_activity"]
             embed = discord.Embed(
                 title = "Emotes",
-                description = "",
-                colour = discord.Colour.blue()
+                description = usage_activity,
+                colour = discord.Colour.blue(),
+                footer = f'{pg_num}/{n}'
             )
-            EmoteCommand.reset_database()
+            first_pg_message = collection.find({"pg_num": 1}, {"_id": 0})
+            for values in first_pg_message:
+                pg_num = values["pg_num"]
+                emojis_list = values["sorted_emotes"]
+                usage_activity = values["usage_activity"]
+            # for id in emojis_list:
+            #     emoji = self.bot.get_emoji(id)
+            #     embed.add_field(name= emoji.name,)
             # for key, value in sorted_emotes.items():
             #     await ctx.send(f'{self.bot.get_emoji(key)} {value}')
                 # else:

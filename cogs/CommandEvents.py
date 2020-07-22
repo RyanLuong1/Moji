@@ -1,11 +1,9 @@
 from discord.ext import commands
-from emojibotclass import EmojiClass
 import re
 
 class CommandEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.serverEmotes = EmojiClass()
 
     # @commands.Cog.listener()
     # async def on_reaction_add(self, reaction, user):

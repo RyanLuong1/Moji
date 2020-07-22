@@ -48,22 +48,24 @@ class CommandEvents(commands.Cog):
     #                     (self.serverEmotes.emojis_dict[id]) += 1
     #                     self.serverEmotes.total += 1
 
-    # """
-    # Discord bots write emotes as <:name_of_emotes:#>.
-    # Parsing the message to get the emojis ids is a preferable way. 
-    # Find the emojis ids by using the following pattern, a group of numbers that ends with a >.
-    # """
-    # @commands.Cog.listener()
-    # async def on_message(self, message):
-    #     if message.author == self.bot.user:
-    #         return
-    #     list_of_ids = re.findall(r"(\d+.)\>", str(message.content))
-    #     for id in list_of_ids:
-    #         emoji = self.bot.get_emoji(int(id))
-    #         if emoji != None:
-    #             (self.serverEmotes.emojis_dict[int(id)]) += 1
-    #             self.serverEmotes.total += 1
-    #     await self.bot.process_commands(message)
+    """
+    Discord bots write emotes as <:name_of_emotes:#>.
+    Parsing the message to get the emojis ids is a preferable way. 
+    Find the emojis ids by using the following pattern, a group of numbers that ends with a >.
+    """
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author == self.bot.user:
+            return
+        list_of_ids = re.findall(r"(\d+.)\>", str(message.content))
+        for id in list_of_ids:
+            query = {"_id": id}
+            if (collection.count_documents(query) == 1):
+                field = collection.find({"_id": id}, {"count": 1})
+                for value in field:
+                    count = value["count"]
+                count += 1
+                collection.update_one({"_id": emoji.id}, {"$set":{"count": count}})
 
     
 def setup(bot):

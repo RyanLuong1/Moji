@@ -46,7 +46,7 @@ class EmoteCommand(commands.Cog):
         else:
             for emoji in list_of_emojis:
                 query = {"_id": emoji.id}
-                if (collection.count.documents(query) == 0):
+                if (collection.count_documents(query) == 0):
                     EmoteCommand.insert_new_emoji_to_database(emoji.id)
             emojis_dict = {}
             for emoji in list_of_emojis:
@@ -56,6 +56,9 @@ class EmoteCommand(commands.Cog):
                     count = values["count"]
                 emojis_dict.update({id: count})
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
+            query = {"pg_num": 1}
+            if (collection.count_documents(query) > 0):
+                collection.remove({"pg_num": {gt: 0 } })
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens = [[] for i in range(n)]
@@ -75,7 +78,8 @@ class EmoteCommand(commands.Cog):
                     usage_activity = 0
                 pg_num = i + 1
                 fraction = f'{usage_list[i]}/{total}'
-                collection.insert_one({"pg_num": pg_num,
+                collection.insert_one({"message_type": "embed",
+                                        "pg_num": pg_num,
                                         "sorted_emotes": sorted_emotes_in_tens[i],
                                         "sorted_emotes_values": sorted_emotes_values_in_tens[i],
                                         "usage_activity": f'{fraction} ({usage_activity: .2f}%)'})

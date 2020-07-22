@@ -1,7 +1,5 @@
 from discord.ext import commands
 from collections import OrderedDict
-from emojibotclass import EmojiClass
-import pymongo
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os

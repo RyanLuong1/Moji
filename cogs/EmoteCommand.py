@@ -56,9 +56,9 @@ class EmoteCommand(commands.Cog):
                     count = values["count"]
                 emojis_dict.update({id: count})
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
-            query = {"pg_num": 1}
+            query = {"message_type": "embed"}
             if (collection.count_documents(query) > 0):
-                collection.remove({"pg_num": {gt: 0 } })
+                collection.delete_many(query)
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens = [[] for i in range(n)]

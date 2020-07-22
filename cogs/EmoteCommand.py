@@ -21,11 +21,9 @@ class EmoteCommand(commands.Cog):
     def reset_database():
         collection.remove({})
 
-    def insert_emojis_to_database(emoji_id):
-        query = {"_id": emoji_id}
-        if (collection.count_documents(query) == 0):
-                entry = {"_id": emoji_id, "count": 0}
-                collection.insert_one(entry)
+    def insert_new_emoji_to_database(emoji_id):
+        entry = {"_id": emoji_id, "count": 0}
+        collection.insert_one(entry)
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -47,7 +45,9 @@ class EmoteCommand(commands.Cog):
             await ctx.send(f'Your server does not have any custom emotes!')
         else:
             for emoji in list_of_emojis:
-                EmoteCommand.insert_emojis_to_database(emoji.id)
+                query = {"_id": emoji.id}
+                if (collection.count.documents(query) == 0):
+                    EmoteCommand.insert_new_emoji_to_database(emoji.id)
             emojis_dict = {}
             for emoji in list_of_emojis:
                 field = collection.find({"_id": emoji.id}, {"count": 1})
@@ -143,7 +143,7 @@ class EmoteCommand(commands.Cog):
         #             emoji = self.bot.get_emoji(id)
         #             usage += count
         #             message = f'{x+1}. {emoji}: {count}'
-        #             self.serverEmotes.embed_list[index].add_field(name=emoji.name, value=message, inline=False)
+        #             self.serverEmotes.from emojibotclass import EmojiClassembed_list[index].add_field(name=emoji.name, value=message, inline=False)
         #             x += 1
         #             if x % 10 == 0:
         #                 usage_list.append(usage)

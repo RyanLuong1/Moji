@@ -1,6 +1,7 @@
 from discord.ext import commands
 from pymongo import MongoClient
 from dotenv import load_dotenv
+import os
 import re
 
 load_dotenv()

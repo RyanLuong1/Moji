@@ -1,5 +1,13 @@
 from discord.ext import commands
+from pymongo import MongoClient
+from dotenv import load_dotenv
 import re
+
+load_dotenv()
+mongo_url = os.getenv('CONNECTION_URL')
+cluster = MongoClient(mongo_url)
+db = cluster['emotes']
+collection = db['emotes']
 
 class CommandEvents(commands.Cog):
     def __init__(self, bot):

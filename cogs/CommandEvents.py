@@ -1,12 +1,12 @@
 from discord.ext import commands
+from Connection import Connect
 from pymongo import MongoClient
-from dotenv import load_dotenv
-import os
 import re
 
-load_dotenv()
-mongo_url = os.getenv('CONNECTION_URL')
-cluster = MongoClient(mongo_url)
+
+#TODO: count documents is returning 0 for some reason despite the entry existing in the database
+
+cluster = Connect.get_connect()
 db = cluster['emotes']
 collection = db['emotes']
 
@@ -69,8 +69,8 @@ class CommandEvents(commands.Cog):
         list_of_ids = re.findall(r"(\d+.)\>", str(message.content))
         for id in list_of_ids:
             query = {"_id": id}
-            if (collection.count_documents(query) == 1):
-                field = collection.find({"_id": id}, {"count": 1})
+            if (collection.count_documents(query) != 0):
+                field = collection.find(query, {"count": 1})
                 for value in field:
                     count = value["count"]
                 count += 1

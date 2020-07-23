@@ -1,14 +1,10 @@
 from discord.ext import commands
 from collections import OrderedDict
+from Connection import Connect
 from pymongo import MongoClient
-from dotenv import load_dotenv
-import os
 import math
 import discord
-load_dotenv()
-
-mongo_url = os.getenv('CONNECTION_URL')
-cluster = MongoClient(mongo_url)
+cluster = Connect.get_connect()
 db = cluster['emotes']
 collection = db['emotes']
 

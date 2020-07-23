@@ -79,12 +79,12 @@ class EmoteCommand(commands.Cog):
                                         "sorted_emotes": sorted_emotes_in_tens[i],
                                         "sorted_emotes_values": sorted_emotes_values_in_tens[i],
                                         "usage_activity": f'{fraction} ({usage_activity: .2f}%)'})
-            first_pg_message = collection.find({"pg_num": 1}, {"_id": 0})
-            for values in first_pg_message:
-                pg_num = values["pg_num"]
-                emojis_list = values["sorted_emotes"]
-                emojis_value_list = values["sorted_emotes_values"]
-                usage_activity = values["usage_activity"]
+            first_pg_message_document = collection.find({"pg_num": 1}, {"_id": 0})
+            for fields in first_pg_message_document:
+                pg_num = fields["pg_num"]
+                emojis_list = fields["sorted_emotes"]
+                emojis_value_list = fields["sorted_emotes_values"]
+                usage_activity = fields["usage_activity"]
             embed = discord.Embed(
                 title = "Emotes",
                 description = f'Total: {total}\n Usage Activity: {usage_activity}',

@@ -18,7 +18,7 @@ class EmoteCommand(commands.Cog):
         collection.remove({})
 
     def insert_new_emoji_to_database(emoji_id):
-        entry = {"_id": emoji_id, "count": 0}
+        entry = {"emoji_id": emoji_id, "count": 0}
         collection.insert_one(entry)
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
@@ -46,11 +46,11 @@ class EmoteCommand(commands.Cog):
                     EmoteCommand.insert_new_emoji_to_database(emoji.id)
             emojis_dict = {}
             for emoji in list_of_emojis:
-                field = collection.find({"_id": emoji.id}, {"count": 1})
-                for values in field:
-                    id = values["_id"]
-                    count = values["count"]
-                emojis_dict.update({id: count})
+                document = collection.find({"emoji_id": emoji.id}, {"_id": 0})
+                for fields in document:
+                    emoji_id = fields["emoji_id"]
+                    count = fields["count"]
+                emojis_dict.update({emoji_id: count})
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
             query = {"message_type": "embed"}
             if (collection.count_documents(query) > 0):
@@ -66,7 +66,7 @@ class EmoteCommand(commands.Cog):
                 sorted_emotes_values_in_tens[index].append(value)
                 usage_list[index] += value
                 x += 1
-            total = len(list_of_emojis)   
+            total = len(list_of_emojis)
             for i in range(n):
                 try:
                     usage_activity = usage_list[i] / total

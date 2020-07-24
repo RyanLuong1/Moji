@@ -68,13 +68,13 @@ class CommandEvents(commands.Cog):
             return
         list_of_ids = re.findall(r"(\d+.)\>", str(message.content))
         for id in list_of_ids:
-            query = {"_id": id}
+            query = {"emoji_id": int(id)}
             if (collection.count_documents(query) != 0):
-                field = collection.find(query, {"count": 1})
+                field = collection.find(query, {"_id": 0})
                 for value in field:
                     count = value["count"]
                 count += 1
-                collection.update_one({"_id": emoji.id}, {"$set":{"count": count}})
+                collection.update_one({"emoji_id": int(id)}, {"$set":{"count": count}})
 
     
 def setup(bot):

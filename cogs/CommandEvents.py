@@ -20,6 +20,13 @@ class CommandEvents(commands.Cog):
             return
         if not reaction.message.embeds:
             id = reaction.emoji.id
+            query = {"emoji_id": int(id)}
+            if (collection.count_documents(query) != 0):
+                field = collection.find(query, {"_id": 0})
+                for value in field:
+                    count = value["count"]
+                count += 1
+                collection.update_one({"emoji_id": int(id)}, {"$set":{"count": count}})
         #     count = self.serverEmotes.emojis_dict.get(id, -1)
         #     if count != -1:
         #         (self.serverEmotes.emojis_dict[id]) += 1

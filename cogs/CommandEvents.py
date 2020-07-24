@@ -2,6 +2,7 @@ from discord.ext import commands
 from Connection import Connect
 from pymongo import MongoClient
 import re
+import discord
 
 
 #TODO: count documents is returning 0 for some reason despite the entry existing in the database
@@ -14,6 +15,10 @@ class CommandEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
+    
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         if reaction.message.author == self.bot.user:

@@ -17,8 +17,8 @@ class EmoteCommand(commands.Cog):
     def reset_database():
         collection.remove({})
 
-    def insert_new_emoji_to_database(emoji_id):
-        entry = {"emoji_id": emoji_id, "count": 0}
+    def insert_new_emoji_to_database(emoji_name, emoji_id):
+        entry = {"emoji_name": emoji_name ,"emoji_id": emoji_id, "count": 0}
         collection.insert_one(entry)
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
@@ -41,9 +41,9 @@ class EmoteCommand(commands.Cog):
             await ctx.send(f'Your server does not have any custom emotes!')
         else:
             for emoji in list_of_emojis:
-                query = {"_id": emoji.id}
+                query = {"emoji_id": emoji.id}
                 if (collection.count_documents(query) == 0):
-                    EmoteCommand.insert_new_emoji_to_database(emoji.id)
+                    EmoteCommand.insert_new_emoji_to_database(emoji.name, emoji.id)
             emojis_dict = {}
             for emoji in list_of_emojis:
                 document = collection.find({"emoji_id": emoji.id}, {"_id": 0})

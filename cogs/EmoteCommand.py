@@ -60,6 +60,7 @@ class EmoteCommand(commands.Cog):
                 collection.remove(query)
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
+            total_count = 0
             sorted_emotes_in_tens = [[] for i in range(n)]
             sorted_emotes_values_in_tens = [[] for i in range(n)]
             usage_list = [0 for i in range(n)]
@@ -68,20 +69,21 @@ class EmoteCommand(commands.Cog):
                 sorted_emotes_in_tens[index].append(key)
                 sorted_emotes_values_in_tens[index].append(value)
                 usage_list[index] += value
+                total_count += value
                 x += 1
-            total = len(list_of_emojis)
             for i in range(n):
                 try:
-                    usage_activity = usage_list[i] / total
+                    usage_activity = usage_list[i] / total_count
                 except ZeroDivisionError:
                     usage_activity = 0
                 pg_num = i + 1
-                fraction = f'{usage_list[i]}/{total}'
+                fraction = f'{usage_list[i]}/{total_count}'
                 collection.insert_one({"message_type": "embed",
                                         "pg_num": pg_num,
                                         "sorted_emotes": sorted_emotes_in_tens[i],
                                         "sorted_emotes_values": sorted_emotes_values_in_tens[i],
-                                        "usage_activity": f'{fraction} ({usage_activity: .2f}%)'})
+                                        "usage_activity": f'{fraction} ({usage_activity: .2f}%)',
+                                        "total_count": total_count})
             collection.insert_one({"max_pgs": n, "current_pg": 1})
             first_pg_message_document = collection.find({"pg_num": 1}, {"_id": 0})
             for fields in first_pg_message_document:
@@ -91,7 +93,7 @@ class EmoteCommand(commands.Cog):
                 usage_activity = fields["usage_activity"]
             embed = discord.Embed(
                 title = "Emotes",
-                description = f'Total: {total}\n Usage Activity: {usage_activity}',
+                description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',
                 colour = discord.Colour.blue(),
             )
             embed.set_footer(text=f'Page: {pg_num}/{n}')

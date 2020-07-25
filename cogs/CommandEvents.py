@@ -45,10 +45,24 @@ class CommandEvents(commands.Cog):
                     current_pg = values["current_pg"]
                 if reaction.emoji == '◀️':
                     if current_pg == 1:
-                        new_pg_num = max_pgs
+                        current_pg = max_pgs
                     else:
                         current_pg += 1
                 elif reaction.emoji == '▶️':
+                    if current_pg == max_pgs:
+                        current_pg = 1
+                    else:
+                        current_pg += 1
+            else:
+                id = reaction.emoji.id
+                query = {"emoji_id": int(id)}
+                if (collection.count_documents(query) != 0):
+                    field = collection.find(query, {"_id": 0})
+                    for value in field:
+                        count = value["count"]
+                    count += 1
+                    collection.update_one({"emoji_id": int(id)}, {"$set":{"count": count}})
+                
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]

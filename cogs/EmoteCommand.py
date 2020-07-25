@@ -55,6 +55,9 @@ class EmoteCommand(commands.Cog):
             query = {"message_type": "embed"}
             if (collection.count_documents(query) > 0):
                 collection.delete_many(query)
+            query = {"current_pg": 1}
+            if (collection.count_documents(query) > 0):
+                collection.remove(query)
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens = [[] for i in range(n)]
@@ -79,6 +82,7 @@ class EmoteCommand(commands.Cog):
                                         "sorted_emotes": sorted_emotes_in_tens[i],
                                         "sorted_emotes_values": sorted_emotes_values_in_tens[i],
                                         "usage_activity": f'{fraction} ({usage_activity: .2f}%)'})
+            collection.insert_one({"max_pgs": n, "current_pg": 1})
             first_pg_message_document = collection.find({"pg_num": 1}, {"_id": 0})
             for fields in first_pg_message_document:
                 pg_num = fields["pg_num"]

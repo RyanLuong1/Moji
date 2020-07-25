@@ -21,9 +21,10 @@ class CommandEvents(commands.Cog):
     
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if reaction.message.author == self.bot.user:
+        message = reaction.message
+        if message.author == self.bot.user:
             return
-        if not reaction.message.embeds:
+        if not message.embeds:
             id = reaction.emoji.id
             query = {"emoji_id": int(id)}
             if (collection.count_documents(query) != 0):

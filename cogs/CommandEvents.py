@@ -57,6 +57,7 @@ class CommandEvents(commands.Cog):
                         current_pg = 1
                     else:
                         current_pg += 1
+                collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
                 await reaction.remove(user)
                 next_pg_document = collection.find({"pg_num": current_pg}, {"message_type": 0, "_id": 0})
                 for values in next_pg_document:

@@ -73,9 +73,7 @@ class CommandEvents(commands.Cog):
                     count = sorted_emotes_values[i]
                     position = ((current_pg - 1) * 10) + (i + 1)
                     embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
-                reaction_message = await ctx.send(embed=embed)
-                await reaction_message.add_reaction('◀️')
-                await reaction_message.add_reaction('▶️')
+                reaction_message = await ctx.edit(embed=embed)
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]

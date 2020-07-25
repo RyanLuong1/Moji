@@ -21,10 +21,10 @@ class CommandEvents(commands.Cog):
     
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        message = reaction.message
-        if message.author == self.bot.user:
+        reaction_message = reaction.message
+        if reaction_message.author == self.bot.user:
             return
-        if not message.embeds:
+        elif not message.embeds:
             id = reaction.emoji.id
             query = {"emoji_id": int(id)}
             if (collection.count_documents(query) != 0):
@@ -37,10 +37,18 @@ class CommandEvents(commands.Cog):
         #     if count != -1:
         #         (self.serverEmotes.emojis_dict[id]) += 1
         #         self.serverEmotes.total += 1
-        # else:
-        #     if reaction.message.embeds[0].title == "Emotes":
-        #         if reaction.emoji == '◀️':
-        #             if self.serverEmotes.pg_num == 0:
+        else:
+            if reaction_message.embeds[0].title == "Emotes":
+                field = collection.find({"current_pg": {'$exists': 'true'}})
+                for values in field:
+                    max_pgs = values["max_pgs"]
+                    current_pg = values["current_pg"]
+                if reaction.emoji == '◀️':
+                    if current_pg == 1:
+                        new_pg_num = max_pgs
+                    else:
+                        current_pg += 1
+                elif reaction.emoji == '▶️':
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]

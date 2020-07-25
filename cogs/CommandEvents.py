@@ -54,7 +54,7 @@ class CommandEvents(commands.Cog):
                         current_pg = 1
                     else:
                         current_pg += 1
-                
+                await reaction.remove(user)
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]

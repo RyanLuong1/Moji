@@ -47,12 +47,13 @@ class CommandEvents(commands.Cog):
                     if current_pg == 1:
                         current_pg = max_pgs
                     else:
-                        current_pg += 1
+                        current_pg -= 1
                 elif reaction.emoji == '▶️':
                     if current_pg == max_pgs:
                         current_pg = 1
                     else:
                         current_pg += 1
+
             else:
                 id = reaction.emoji.id
                 query = {"emoji_id": int(id)}

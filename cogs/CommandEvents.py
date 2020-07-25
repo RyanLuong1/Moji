@@ -78,6 +78,15 @@ class CommandEvents(commands.Cog):
                     position = ((current_pg - 1) * 10) + (i + 1)
                     embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
                 await reaction_message.edit(embed=embed)
+            else:
+                id = reaction.emoji.id
+                query = {"emoji_id": int(id)}
+                if (collection.count_documents(query) != 0):
+                    field = collection.find(query, {"_id": 0})
+                    for value in field:
+                        count = value["count"]
+                    count += 1
+                    collection.update_one({"emoji_id": int(id)}, {"$set":{"count": count}})
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]

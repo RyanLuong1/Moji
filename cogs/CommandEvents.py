@@ -55,6 +55,12 @@ class CommandEvents(commands.Cog):
                     else:
                         current_pg += 1
                 await reaction.remove(user)
+                next_pg_document = collection.find({"pg_num": current_pg}, {"message_type": 0, "_id": 0})
+                for values in next_pg_document:
+                    sorted_emotes = values["sorted_emotes"]
+                    sorted_emotes_values = values["sorted_emotes_values"]
+                    usage_activity = values["usage_activity"]
+                    total_count = values["total_count"]
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]

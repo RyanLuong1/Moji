@@ -61,6 +61,18 @@ class CommandEvents(commands.Cog):
                     sorted_emotes_values = values["sorted_emotes_values"]
                     usage_activity = values["usage_activity"]
                     total_count = values["total_count"]
+                embed = discord.Embed(
+                    title = "Emotes",
+                    description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',
+                    colour = discord.Colour.blue(),
+                )
+                embed.set_footer(text=f'Page: {current_pg}/{max_pgs}')
+                n = len(sorted_emotes)
+                for i in range(n):
+                    emoji = self.bot.get_emoji(sorted_emotes[i])
+                    count = sorted_emotes_values[i]
+                    position = ((current_pg - 1) * 10) + (i + 1)
+                    embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]

@@ -24,11 +24,17 @@ class CommandEvents(commands.Cog):
     
     def get_current_and_max_pages():
         page_document = collection.find({"current_pg": {'$exists': 'true'}})
-        for values in field:
+        for values in page_document:
             max_pgs = values["max_pgs"]
             current_pg = values["current_pg"]
         return current_pg, max_pgs
 
+    def go_to_next_page(current_pg, max_pgs):
+        if current_pg == 1:
+            current_pg = max_pgs
+        else:
+            current_pg -= 1
+        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
@@ -50,16 +56,12 @@ class CommandEvents(commands.Cog):
             if reaction_message.embeds[0].title == "Emotes":
                 current_pg, max_pgs = CommandEvents.get_current_and_max_pages()
                 if reaction.emoji == '◀️':
-                    if current_pg == 1:
-                        current_pg = max_pgs
-                    else:
-                        current_pg -= 1
+                    CommandEvents.go_to_next_page(current_pg, max_pgs)
                 elif reaction.emoji == '▶️':
                     if current_pg == max_pgs:
                         current_pg = 1
                     else:
                         current_pg += 1
-                collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
                 await reaction.remove(user)
                 next_pg_document = collection.find({"pg_num": current_pg}, {"message_type": 0, "_id": 0})
                 for values in next_pg_document:

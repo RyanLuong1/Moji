@@ -21,6 +21,13 @@ class CommandEvents(commands.Cog):
             count = value["count"]
         count += 1
         collection.update_one({"emoji_id": emoji_id}, {"$set":{"count": count}})
+    
+    def get_current_and_max_pages():
+        page_document = collection.find({"current_pg": {'$exists': 'true'}})
+        for values in field:
+            max_pgs = values["max_pgs"]
+            current_pg = values["current_pg"]
+        return current_pg, max_pgs
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -41,10 +48,7 @@ class CommandEvents(commands.Cog):
         #         self.serverEmotes.total += 1
         else:
             if reaction_message.embeds[0].title == "Emotes":
-                field = collection.find({"current_pg": {'$exists': 'true'}})
-                for values in field:
-                    max_pgs = values["max_pgs"]
-                    current_pg = values["current_pg"]
+                current_pg, max_pgs = CommandEvents.get_current_and_max_pages()
                 if reaction.emoji == '◀️':
                     if current_pg == 1:
                         current_pg = max_pgs

@@ -24,10 +24,8 @@ class CommandEvents(commands.Cog):
         bot = self.bot
         reaction_message = reaction.message
         if user.bot:
-            print(f'Reaction made by bot')
             return
         elif not reaction_message.embeds:
-            print(f'This is not an embed message')
             id = reaction.emoji.id
             query = {"emoji_id": int(id)}
             if (collection.count_documents(query) != 0):
@@ -41,7 +39,6 @@ class CommandEvents(commands.Cog):
         #         (self.serverEmotes.emojis_dict[id]) += 1
         #         self.serverEmotes.total += 1
         else:
-            print(f'this is a embed message')
             if reaction_message.embeds[0].title == "Emotes":
                 field = collection.find({"current_pg": {'$exists': 'true'}})
                 for values in field:

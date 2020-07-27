@@ -118,9 +118,9 @@ class CommandEvents(commands.Cog):
         if message.author == self.bot.user:
             return
         list_of_emojis_ids = re.findall(r"(\d+.)\>", str(message.content))
-        for id in list_of_ids:
-            if (collection.count_documents({"emoji_id": int(id)}) != 0):
-                CommandEvents.increment_emoji_count(int(id))
+        for emoji_id in list_of_emojis_ids:
+            if (collection.count_documents({"emoji_id": int(emoji_id)}) != 0):
+                CommandEvents.increment_emoji_count(int(emoji_id))
 
     
 def setup(bot):

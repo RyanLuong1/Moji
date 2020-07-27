@@ -15,12 +15,12 @@ class CommandEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def increment_emoji_count(query, id):
-        field = collection.find(query, {"_id": 0})
+    def increment_emoji_count(emoji_id):
+        field = collection.find({"emoji_id": emoji_id}, {"_id": 0})
         for value in field:
             count = value["count"]
         count += 1
-        collection.update_one({"emoji_id": int(id)}, {"$set":{"count": count}})
+        collection.update_one({"emoji_id": emoji_id}, {"$set":{"count": count}})
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -33,10 +33,8 @@ class CommandEvents(commands.Cog):
         if user.bot:
             return
         elif not reaction_message.embeds:
-            id = reaction.emoji.id
-            query = {"emoji_id": int(id)}
-            if (collection.count_documents(query) != 0):
-                CommandEvents.increment_emoji_count(query, id)
+            if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):
+                CommandEvents.increment_emoji_count(reaction.emoji.id)
         #     count = self.serverEmotes.emojis_dict.get(id, -1)
         #     if count != -1:
         #         (self.serverEmotes.emojis_dict[id]) += 1
@@ -79,10 +77,8 @@ class CommandEvents(commands.Cog):
                     embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
                 await reaction_message.edit(embed=embed)
             else:
-                id = reaction.emoji.id
-                query = {"emoji_id": int(id)}
-                if (collection.count_documents(query) != 0):
-                    CommandEvents.increment_emoji_count(query, id)
+                if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):
+                    CommandEvents.increment_emoji_count(reaction.emoji.id)
         #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
         #                 pg_num = self.serverEmotes.pg_num
         #                 embed = self.serverEmotes.embed_list[pg_num]
@@ -123,10 +119,8 @@ class CommandEvents(commands.Cog):
             return
         list_of_ids = re.findall(r"(\d+.)\>", str(message.content))
         for id in list_of_ids:
-            id = int(id)
-            query = {"emoji_id": id}
-            if (collection.count_documents(query) != 0):
-                CommandEvents.increment_emoji_count(query, id)
+            if (collection.count_documents({"emoji_id": int(id)}) != 0):
+                CommandEvents.increment_emoji_count(int(id))
 
     
 def setup(bot):

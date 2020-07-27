@@ -42,6 +42,16 @@ class CommandEvents(commands.Cog):
         else:
             current_pg += 1
         collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
+    
+    def get_new_page_document_values(current_pg):
+        next_pg_document = collection.find({"pg_num": current_pg}, {"message_type": 0, "_id": 0})
+        for values in next_pg_document:
+            sorted_emotes = values["sorted_emotes"]
+            sorted_emotes_values = values["sorted_emotes_values"]
+            usage_activity = values["usage_activity"]
+            total_count = values["total_count"]
+        return sorted_emotes, sorted_emotes_values, usage_activity, total_count
+
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
@@ -67,12 +77,7 @@ class CommandEvents(commands.Cog):
                 elif reaction.emoji == '▶️':
                     CommandEvents.go_back_a_page(current_pg, max_pgs)
                 await reaction.remove(user)
-                next_pg_document = collection.find({"pg_num": current_pg}, {"message_type": 0, "_id": 0})
-                for values in next_pg_document:
-                    sorted_emotes = values["sorted_emotes"]
-                    sorted_emotes_values = values["sorted_emotes_values"]
-                    usage_activity = values["usage_activity"]
-                    total_count = values["total_count"]
+                sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(current_pg)
                 embed = discord.Embed(
                     title = "Emotes",
                     description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',

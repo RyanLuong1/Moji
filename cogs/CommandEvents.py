@@ -35,6 +35,13 @@ class CommandEvents(commands.Cog):
         else:
             current_pg -= 1
         collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
+    
+    def go_back_a_page(current_pg, max_pgs):
+        if current_pg == max_pgs:
+            current_pg = 1
+        else:
+            current_pg += 1
+        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
@@ -58,10 +65,7 @@ class CommandEvents(commands.Cog):
                 if reaction.emoji == '◀️':
                     CommandEvents.go_to_next_page(current_pg, max_pgs)
                 elif reaction.emoji == '▶️':
-                    if current_pg == max_pgs:
-                        current_pg = 1
-                    else:
-                        current_pg += 1
+                    CommandEvents.go_back_a_page(current_pg, max_pgs)
                 await reaction.remove(user)
                 next_pg_document = collection.find({"pg_num": current_pg}, {"message_type": 0, "_id": 0})
                 for values in next_pg_document:

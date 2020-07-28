@@ -14,6 +14,8 @@ collection = db['emotes']
 class CommandEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.current_pg = 0
+        self.max_pgs = 0
 
     def increment_emoji_count(emoji_id):
         field = collection.find({"emoji_id": emoji_id}, {"_id": 0})
@@ -30,19 +32,23 @@ class CommandEvents(commands.Cog):
         return current_pg, max_pgs
 
     def go_to_next_page(current_pg, max_pgs):
-        if current_pg == 1:
-            current_pg = max_pgs
-        else:
-            current_pg -= 1
-        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
-    
-    def go_back_a_page(current_pg, max_pgs):
         if current_pg == max_pgs:
             current_pg = 1
         else:
             current_pg += 1
         collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
+        new_pg = current_pg
+        return new_pg
     
+    def go_back_a_page(current_pg, max_pgs):
+        if current_pg == 1:
+            current_pg = max_pgs
+        else:
+            current_pg -= 1
+        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
+        new_pg = current_pg
+        return new_pg
+
     def get_new_page_document_values(current_pg):
         next_pg_document = collection.find({"pg_num": current_pg}, {"message_type": 0, "_id": 0})
         for values in next_pg_document:
@@ -73,17 +79,17 @@ class CommandEvents(commands.Cog):
             if reaction_message.embeds[0].title == "Emotes":
                 current_pg, max_pgs = CommandEvents.get_current_and_max_pages()
                 if reaction.emoji == '◀️':
-                    CommandEvents.go_to_next_page(current_pg, max_pgs)
+                    new_pg = CommandEvents.go_back_a_page(current_pg, max_pgs)
                 elif reaction.emoji == '▶️':
-                    CommandEvents.go_back_a_page(current_pg, max_pgs)
+                    new_pg = CommandEvents.go_to_next_page(current_pg, max_pgs)
                 await reaction.remove(user)
-                sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(current_pg)
+                sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(new_pg)
                 embed = discord.Embed(
                     title = "Emotes",
                     description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',
                     colour = discord.Colour.blue(),
                 )
-                embed.set_footer(text=f'Page: {current_pg}/{max_pgs}')
+                embed.set_footer(text=f'Page: {new_pg}/{max_pgs}')
                 n = len(sorted_emotes)
                 for i in range(n):
                     emoji = self.bot.get_emoji(sorted_emotes[i])

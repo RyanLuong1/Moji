@@ -87,7 +87,6 @@ class CommandEvents(commands.Cog):
                     new_pg = CommandEvents.go_back_a_page(current_pg, max_pgs)
                 elif reaction.emoji == '▶️':
                     new_pg = CommandEvents.go_to_next_page(current_pg, max_pgs)
-                await reaction.remove(user)
                 sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(new_pg)
                 embed = CommandEvents.create_embed_message(total_count, usage_activity, new_pg, max_pgs)
                 n = len(sorted_emotes)
@@ -96,6 +95,7 @@ class CommandEvents(commands.Cog):
                     count = sorted_emotes_values[i]
                     position = ((new_pg - 1) * 10) + (i + 1)
                     embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
+                await reaction.remove(user)
                 await reaction_message.edit(embed=embed)
             else:
                 if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):

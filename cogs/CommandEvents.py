@@ -27,9 +27,8 @@ class CommandEvents(commands.Cog):
     def get_current_and_max_pages():
         page_document = collection.find({"current_pg": {'$exists': 'true'}})
         for values in page_document:
-            max_pgs = values["max_pgs"]
-            current_pg = values["current_pg"]
-        return current_pg, max_pgs
+            self.max_pgs = values["max_pgs"]
+            self.current_pg = values["current_pg"]
 
     def go_to_next_page(current_pg, max_pgs):
         if current_pg == max_pgs:

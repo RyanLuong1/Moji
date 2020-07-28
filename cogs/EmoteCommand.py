@@ -20,6 +20,16 @@ class EmoteCommand(commands.Cog):
     def insert_new_emoji_to_database(emoji_name, emoji_id):
         entry = {"emoji_name": emoji_name ,"emoji_id": emoji_id, "count": 0}
         collection.insert_one(entry)
+    
+    def create_emojis_dictionary(list_of_emojis):
+        emojis_dict = {}
+        for emoji in list_of_emojis:
+            document = collection.find({"emoji_id": emoji.id}, {"_id": 0})
+            for fields in document:
+                emoji_id = fields["emoji_id"]
+                count = fields["count"]
+            emojis_dict.update({emoji_id: count})
+        return emojis_dict
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -43,13 +53,7 @@ class EmoteCommand(commands.Cog):
             for emoji in list_of_emojis:
                 if (collection.count_documents({"emoji_id": emoji.id}) == 0):
                     EmoteCommand.insert_new_emoji_to_database(emoji.name, emoji.id)
-            emojis_dict = {}
-            for emoji in list_of_emojis:
-                document = collection.find({"emoji_id": emoji.id}, {"_id": 0})
-                for fields in document:
-                    emoji_id = fields["emoji_id"]
-                    count = fields["count"]
-                emojis_dict.update({emoji_id: count})
+            emojis_dict = EmoteCommand.create_emojis_dictionary(list_of_emojis)
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
             query = {"message_type": "embed"}
             if (collection.count_documents(query) > 0):

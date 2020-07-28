@@ -14,8 +14,6 @@ collection = db['emotes']
 class CommandEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.current_pg = 0
-        self.max_pgs = 0
 
     def increment_emoji_count(emoji_id):
         field = collection.find({"emoji_id": emoji_id}, {"_id": 0})
@@ -27,25 +25,24 @@ class CommandEvents(commands.Cog):
     def get_current_and_max_pages():
         page_document = collection.find({"current_pg": {'$exists': 'true'}})
         for values in page_document:
-            self.max_pgs = values["max_pgs"]
-            self.current_pg = values["current_pg"]
+            max_pgs = values["max_pgs"]
+            current_pg = values["current_pg"]
+        return current_pg, max_pgs
 
     def go_to_next_page(current_pg, max_pgs):
         if current_pg == max_pgs:
-            current_pg = 1
+            new_pg = 1
         else:
-            current_pg += 1
-        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
-        new_pg = current_pg
+            new_pg = current_pg + 1
+        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": new_pg}})
         return new_pg
     
     def go_back_a_page(current_pg, max_pgs):
         if current_pg == 1:
-            current_pg = max_pgs
+            new_pg = max_pgs * 1
         else:
-            current_pg -= 1
-        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": current_pg}})
-        new_pg = current_pg
+            new_pg = current_pg - 1
+        collection.update_one({"max_pgs": max_pgs}, {"$set":{"current_pg": new_pg}})
         return new_pg
 
     def get_new_page_document_values(current_pg):
@@ -93,7 +90,7 @@ class CommandEvents(commands.Cog):
                 for i in range(n):
                     emoji = self.bot.get_emoji(sorted_emotes[i])
                     count = sorted_emotes_values[i]
-                    position = ((current_pg - 1) * 10) + (i + 1)
+                    position = ((new_pg - 1) * 10) + (i + 1)
                     embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
                 await reaction_message.edit(embed=embed)
             else:

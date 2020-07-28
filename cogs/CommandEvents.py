@@ -86,10 +86,6 @@ class CommandEvents(commands.Cog):
         elif not reaction_message.embeds:
             if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):
                 CommandEvents.increment_emoji_count(reaction.emoji.id)
-        #     count = self.serverEmotes.emojis_dict.get(id, -1)
-        #     if count != -1:
-        #         (self.serverEmotes.emojis_dict[id]) += 1
-        #         self.serverEmotes.total += 1
         else:
             if reaction_message.embeds[0].title == "Emotes":
                 current_pg, max_pgs = CommandEvents.get_current_and_max_pages()
@@ -105,34 +101,6 @@ class CommandEvents(commands.Cog):
             else:
                 if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):
                     CommandEvents.increment_emoji_count(reaction.emoji.id)
-        #                 self.serverEmotes.pg_num = len(self.serverEmotes.embed_list) - 1
-        #                 pg_num = self.serverEmotes.pg_num
-        #                 embed = self.serverEmotes.embed_list[pg_num]
-        #                 await reaction.message.edit(embed=embed)
-        #             else:
-        #                 self.serverEmotes.pg_num -= 1
-        #                 pg_num = self.serverEmotes.pg_num
-        #                 embed = self.serverEmotes.embed_list[pg_num]
-        #                 await reaction.message.edit(embed=embed)
-        #             await reaction.remove(user)
-        #         elif reaction.emoji == '▶️':
-        #             if self.serverEmotes.pg_num == len(self.serverEmotes.embed_list) - 1:
-        #                 self.serverEmotes.pg_num = 0
-        #                 pg_num = self.serverEmotes.pg_num
-        #                 embed = self.serverEmotes.embed_list[pg_num]
-        #                 await reaction.message.edit(embed=embed)
-        #             else:
-        #                 self.serverEmotes.pg_num += 1
-        #                 pg_num = self.serverEmotes.pg_num
-        #                 embed = self.serverEmotes.embed_list[pg_num]
-        #                 await reaction.message.edit(embed=embed)
-        #             await reaction.remove(user)
-        #         else:
-        #             id = reaction.emoji.id
-        #             count = self.serverEmotes.emojis_dict.get(id, -1)
-        #             if count != -1:
-        #                 (self.serverEmotes.emojis_dict[id]) += 1
-        #                 self.serverEmotes.total += 1
 
     """
     Discord bots write emotes as <:name_of_emotes:#>.

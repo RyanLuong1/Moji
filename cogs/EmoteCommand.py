@@ -36,6 +36,30 @@ class EmoteCommand(commands.Cog):
 
     def remove_previous_page_document():
         collection.remove({"current_pg": 1})
+
+    def get_sorted_emotes_and_its_values_to_list(sorted_emotes, list_of_emojis):
+        x = 0
+        n = math.ceil(len(list_of_emojis) / 10)
+        sorted_emotes_in_tens = [[] for i in range(n)]
+        sorted_emotes_values_in_tens = [[] for i in range(n)]
+        for key, value in sorted_emotes.items():
+            index = math.floor(x/10)
+            sorted_emotes_in_tens[index].append(key)
+            sorted_emotes_values_in_tens[index].append(value)
+            x += 1  
+        return sorted_emotes_in_tens, sorted_emotes_values_in_tens
+    
+    def get_usage_and_total_count_to_list(sorted_emotes, list_of_emojis):
+        x = 0
+        n = math.ceil(len(list_of_emojis) / 10)
+        total_count = 0
+        usage_list = [0 for i in range(n)]
+        for key, value in sorted_emotes.items():
+            index = math.floor(x/10)
+            usage_list[index] += value
+            total_count += value
+            x += 1  
+        return usage_list, total_count
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -65,19 +89,9 @@ class EmoteCommand(commands.Cog):
                 EmoteCommand.remove_previous_embed_documents()
             if (collection.count_documents({"current_pg": 1}) > 0):
                 EmoteCommand.remove_previous_page_document()
-            x = 0
+            sorted_emotes_in_tens, sorted_emotes_values_in_tens = EmoteCommand.get_sorted_emotes_and_its_values_to_list(sorted_emotes, list_of_emojis)
+            usage_list, total_count = EmoteCommand.get_usage_and_total_count_to_list(sorted_emotes, list_of_emojis)
             n = math.ceil(len(list_of_emojis) / 10)
-            total_count = 0
-            sorted_emotes_in_tens = [[] for i in range(n)]
-            sorted_emotes_values_in_tens = [[] for i in range(n)]
-            usage_list = [0 for i in range(n)]
-            for key, value in sorted_emotes.items():
-                index = math.floor(x/10)
-                sorted_emotes_in_tens[index].append(key)
-                sorted_emotes_values_in_tens[index].append(value)
-                usage_list[index] += value
-                total_count += value
-                x += 1
             for i in range(n):
                 try:
                     usage_activity = (usage_list[i] / total_count) * 100

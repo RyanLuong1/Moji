@@ -33,6 +33,9 @@ class EmoteCommand(commands.Cog):
     
     def remove_previous_embed_documents():
         collection.delete_many({"message_type": "embed"}) 
+
+    def remove_previous_page_document():
+        collection.remove({"current_pg": 1})
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -60,9 +63,8 @@ class EmoteCommand(commands.Cog):
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
             if (collection.count_documents({"message_type": "embed"}) > 0):
                 EmoteCommand.remove_previous_embed_documents()
-            query = {"current_pg": 1}
-            if (collection.count_documents(query) > 0):
-                collection.remove(query)
+            if (collection.count_documents({"current_pg": 1}) > 0):
+                EmoteCommand.remove_previous_page_document()
             x = 0
             n = math.ceil(len(list_of_emojis) / 10)
             total_count = 0

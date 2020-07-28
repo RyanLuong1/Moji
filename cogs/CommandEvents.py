@@ -54,6 +54,15 @@ class CommandEvents(commands.Cog):
             total_count = values["total_count"]
         return sorted_emotes, sorted_emotes_values, usage_activity, total_count
 
+    def create_embed_message(total_count, usage_activity, new_pg, max_pgs):
+        embed = discord.Embed(
+            title = "Emotes",
+            description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',
+            colour = discord.Colour.blue(),
+        )
+        embed.set_footer(text=f'Page: {new_pg}/{max_pgs}')
+        return embed  
+
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
@@ -80,12 +89,7 @@ class CommandEvents(commands.Cog):
                     new_pg = CommandEvents.go_to_next_page(current_pg, max_pgs)
                 await reaction.remove(user)
                 sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(new_pg)
-                embed = discord.Embed(
-                    title = "Emotes",
-                    description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',
-                    colour = discord.Colour.blue(),
-                )
-                embed.set_footer(text=f'Page: {new_pg}/{max_pgs}')
+                embed = CommandEvents.create_embed_message(total_count, usage_activity, new_pg, max_pgs)
                 n = len(sorted_emotes)
                 for i in range(n):
                     emoji = self.bot.get_emoji(sorted_emotes[i])

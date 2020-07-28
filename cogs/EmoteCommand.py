@@ -73,6 +73,9 @@ class EmoteCommand(commands.Cog):
                                     "sorted_emotes_values": sorted_emotes_values_in_tens[i],
                                     "usage_activity": f'{fraction} ({usage_activity: .2f}%)',
                                     "total_count": total_count})
+
+    def insert_new_page_document(list_size):
+        collection.insert_one({"max_pgs": list_size, "current_pg": 1})
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -106,7 +109,7 @@ class EmoteCommand(commands.Cog):
             sorted_emotes_in_tens, sorted_emotes_values_in_tens = EmoteCommand.get_sorted_emotes_and_its_values_to_list(sorted_emotes, list_size)
             usage_list, total_count = EmoteCommand.get_usage_and_total_count_to_list(sorted_emotes, list_size)
             EmoteCommand.create_embed_documents(sorted_emotes_in_tens, sorted_emotes_values_in_tens, usage_list, total_count, list_size)
-            collection.insert_one({"max_pgs": list_size, "current_pg": 1})
+            EmoteCommand.insert_new_page_document(list_size)
             first_pg_message_document = collection.find({"pg_num": 1}, {"_id": 0})
             for fields in first_pg_message_document:
                 pg_num = fields["pg_num"]

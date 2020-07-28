@@ -94,6 +94,12 @@ class EmoteCommand(commands.Cog):
         )
         embed.set_footer(text=f'Page: {pg_num}/{list_size}')
         return embed
+    def update_embed_message_with_emojis_info(embed, bot, emojis_list, emojis_values_list):
+        for i in range(10):
+            emoji = bot.get_emoji(emojis_list[i])
+            count = emojis_values_list[i]
+            embed.add_field(name=emoji.name, value=f'{1+i}. {emoji}: {count}', inline=False)
+        return embed
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -130,12 +136,8 @@ class EmoteCommand(commands.Cog):
             EmoteCommand.insert_new_page_document(list_size)
             pg_num, emojis_list, emojis_values_list, usage_activity = EmoteCommand.get_first_page_document_values()
             embed = EmoteCommand.create_embed_message(total_count, usage_activity, pg_num, list_size)
-            n = len(emojis_list)
-            for i in range(n):
-                emoji = self.bot.get_emoji(emojis_list[i])
-                count = emojis_values_list[i]
-                embed.add_field(name=emoji.name, value=f'{1+i}. {emoji}: {count}', inline=False)
-            reaction_message = await ctx.send(embed=embed)
+            updated_embed = EmoteCommand.update_embed_message_with_emojis_info(embed, self.bot, emojis_list, emojis_values_list)
+            reaction_message = await ctx.send(embed=updated_embed)
             await reaction_message.add_reaction('◀️')
             await reaction_message.add_reaction('▶️')
 

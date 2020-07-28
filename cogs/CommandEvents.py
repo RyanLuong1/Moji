@@ -4,9 +4,6 @@ from pymongo import MongoClient
 import re
 import discord
 
-
-#TODO: count documents is returning 0 for some reason despite the entry existing in the database
-
 cluster = Connect.get_connect()
 db = cluster['emotes']
 collection = db['emotes']
@@ -63,7 +60,7 @@ class CommandEvents(commands.Cog):
         embed.set_footer(text=f'Page: {new_pg}/{max_pgs}')
         return embed  
     
-    def update_embed_with_emoji_info(bot, sorted_emotes, sorted_emotes_values, new_pg, embed):
+    def update_embed_with_emoji_info(bot, embed, sorted_emotes, sorted_emotes_values, new_pg):
         n = len(sorted_emotes)
         for i in range(n):
             emoji = bot.get_emoji(sorted_emotes[i])
@@ -95,7 +92,7 @@ class CommandEvents(commands.Cog):
                     new_pg = CommandEvents.go_to_next_page(current_pg, max_pgs)
                 sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(new_pg)
                 embed = CommandEvents.create_embed_message(total_count, usage_activity, new_pg, max_pgs)
-                updated_embed = CommandEvents.update_embed_with_emoji_info(bot, sorted_emotes, sorted_emotes_values, new_pg, embed)
+                updated_embed = CommandEvents.update_embed_with_emoji_info(bot, embed, sorted_emotes, sorted_emotes_values, new_pg)
                 await reaction.remove(user)
                 await reaction_message.edit(embed=updated_embed)
             else:

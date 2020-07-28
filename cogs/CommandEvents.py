@@ -62,6 +62,16 @@ class CommandEvents(commands.Cog):
         )
         embed.set_footer(text=f'Page: {new_pg}/{max_pgs}')
         return embed  
+    
+    def update_embed_with_emoji_info(bot, sorted_emotes, sorted_emotes_values, new_pg, embed):
+        n = len(sorted_emotes)
+        for i in range(n):
+            emoji = bot.get_emoji(sorted_emotes[i])
+            count = sorted_emotes_values[i]
+            position = ((new_pg - 1) * 10) + (i + 1)
+            embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
+        return embed
+
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -89,14 +99,9 @@ class CommandEvents(commands.Cog):
                     new_pg = CommandEvents.go_to_next_page(current_pg, max_pgs)
                 sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(new_pg)
                 embed = CommandEvents.create_embed_message(total_count, usage_activity, new_pg, max_pgs)
-                n = len(sorted_emotes)
-                for i in range(n):
-                    emoji = self.bot.get_emoji(sorted_emotes[i])
-                    count = sorted_emotes_values[i]
-                    position = ((new_pg - 1) * 10) + (i + 1)
-                    embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
+                updated_embed = CommandEvents.update_embed_with_emoji_info(bot, sorted_emotes, sorted_emotes_values, new_pg, embed)
                 await reaction.remove(user)
-                await reaction_message.edit(embed=embed)
+                await reaction_message.edit(embed=updated_embed)
             else:
                 if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):
                     CommandEvents.increment_emoji_count(reaction.emoji.id)

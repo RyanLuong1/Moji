@@ -69,7 +69,6 @@ class CommandEvents(commands.Cog):
             embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
         return embed
 
-
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))

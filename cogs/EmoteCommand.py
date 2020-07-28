@@ -8,8 +8,6 @@ cluster = Connect.get_connect()
 db = cluster['emotes']
 collection = db['emotes']
 
-#TODO: Emotes are inserted 0-8 instead of 0-9
-
 class EmoteCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

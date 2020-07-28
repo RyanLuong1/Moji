@@ -41,8 +41,7 @@ class EmoteCommand(commands.Cog):
             await ctx.send(f'Your server does not have any custom emotes!')
         else:
             for emoji in list_of_emojis:
-                query = {"emoji_id": emoji.id}
-                if (collection.count_documents(query) == 0):
+                if (collection.count_documents({"emoji_id": emoji.id}) == 0):
                     EmoteCommand.insert_new_emoji_to_database(emoji.name, emoji.id)
             emojis_dict = {}
             for emoji in list_of_emojis:

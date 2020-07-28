@@ -73,7 +73,7 @@ class EmoteCommand(commands.Cog):
                 x += 1
             for i in range(n):
                 try:
-                    usage_activity = usage_list[i] / total_count
+                    usage_activity = (usage_list[i] / total_count) * 100
                 except ZeroDivisionError:
                     usage_activity = 0
                 pg_num = i + 1

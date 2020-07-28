@@ -58,6 +58,21 @@ class EmoteCommand(commands.Cog):
             total_count += value
             x += 1  
         return usage_list, total_count
+
+    def create_embed_documents(sorted_emotes_in_tens, sorted_emotes_values_in_tens, usage_list, total_count, list_size):
+        for i in range(list_size):
+            try:
+                usage_activity = (usage_list[i] / total_count) * 100
+            except ZeroDivisionError:
+                usage_activity = 0
+            pg_num = i + 1
+            fraction = f'{usage_list[i]}/{total_count}'
+            collection.insert_one({"message_type": "embed",
+                                    "pg_num": pg_num,
+                                    "sorted_emotes": sorted_emotes_in_tens[i],
+                                    "sorted_emotes_values": sorted_emotes_values_in_tens[i],
+                                    "usage_activity": f'{fraction} ({usage_activity: .2f}%)',
+                                    "total_count": total_count})
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -90,19 +105,7 @@ class EmoteCommand(commands.Cog):
             list_size = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens, sorted_emotes_values_in_tens = EmoteCommand.get_sorted_emotes_and_its_values_to_list(sorted_emotes, list_size)
             usage_list, total_count = EmoteCommand.get_usage_and_total_count_to_list(sorted_emotes, list_size)
-            for i in range(list_size):
-                try:
-                    usage_activity = (usage_list[i] / total_count) * 100
-                except ZeroDivisionError:
-                    usage_activity = 0
-                pg_num = i + 1
-                fraction = f'{usage_list[i]}/{total_count}'
-                collection.insert_one({"message_type": "embed",
-                                        "pg_num": pg_num,
-                                        "sorted_emotes": sorted_emotes_in_tens[i],
-                                        "sorted_emotes_values": sorted_emotes_values_in_tens[i],
-                                        "usage_activity": f'{fraction} ({usage_activity: .2f}%)',
-                                        "total_count": total_count})
+            EmoteCommand.create_embed_documents(sorted_emotes_in_tens, sorted_emotes_values_in_tens, usage_list, total_count, list_size)
             collection.insert_one({"max_pgs": list_size, "current_pg": 1})
             first_pg_message_document = collection.find({"pg_num": 1}, {"_id": 0})
             for fields in first_pg_message_document:

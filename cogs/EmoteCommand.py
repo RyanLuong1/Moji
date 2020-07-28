@@ -30,6 +30,9 @@ class EmoteCommand(commands.Cog):
                 count = fields["count"]
             emojis_dict.update({emoji_id: count})
         return emojis_dict
+    
+    def remove_previous_embed_documents():
+        collection.delete_many({"message_type": "embed"}) 
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
@@ -55,9 +58,8 @@ class EmoteCommand(commands.Cog):
                     EmoteCommand.insert_new_emoji_to_database(emoji.name, emoji.id)
             emojis_dict = EmoteCommand.create_emojis_dictionary(list_of_emojis)
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
-            query = {"message_type": "embed"}
-            if (collection.count_documents(query) > 0):
-                collection.delete_many(query)
+            if (collection.count_documents({"message_type": "embed"}) > 0):
+                EmoteCommand.remove_previous_embed_documents()
             query = {"current_pg": 1}
             if (collection.count_documents(query) > 0):
                 collection.remove(query)

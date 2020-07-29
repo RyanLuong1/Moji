@@ -2,11 +2,14 @@ from discord.ext import commands
 from collections import OrderedDict
 from Connection import Connect
 from pymongo import MongoClient
+
 import math
 import discord
+
 cluster = Connect.get_connect()
 db = cluster['emotes']
 collection = db['emotes']
+
 
 class EmoteCommand(commands.Cog):
     def __init__(self, bot):
@@ -101,7 +104,6 @@ class EmoteCommand(commands.Cog):
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
     (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
-    Sorting the emojis by count descendingly then by name ascendingly makes the list look ordered
     """
 
     @commands.command(name="reset")

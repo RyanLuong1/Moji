@@ -1,6 +1,7 @@
 from discord.ext import commands
 from Connection import Connect
 from pymongo import MongoClient
+
 import re
 import discord
 
@@ -100,7 +101,7 @@ class CommandEvents(commands.Cog):
 
     """
     Discord bots write emotes as <:name_of_emotes:#>.
-    Parsing the message to get the emojis ids is a preferable way. 
+    Parsing the message to get the emojis ids is better since ids are unique, but names are not 
     Find the emojis ids by using the following pattern, a group of numbers that ends with a >.
     """
     @commands.Cog.listener()

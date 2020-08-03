@@ -6,8 +6,8 @@ import re
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes']
-collection = db['emotes']
+db = cluster['YOUR_DATABASE_NAME']
+collection = db['YOUR_COLLECTION_NAME']
 
 class CommandEvents(commands.Cog):
     def __init__(self, bot):
@@ -56,7 +56,7 @@ class CommandEvents(commands.Cog):
         embed = discord.Embed(
             title = "Emotes",
             description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',
-            colour = discord.Colour.blue(),
+            colour = discord.Colour.blue()
         )
         embed.set_footer(text=f'Page: {new_pg}/{max_pgs}')
         return embed  

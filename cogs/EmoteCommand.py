@@ -7,8 +7,8 @@ import math
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['YOUR_DATABASE_NAME']
-collection = db['YOUR_COLLECTION_NAME']
+db = cluster['emotes']
+collection = db['emotes']
 
 
 class EmoteCommand(commands.Cog):
@@ -36,7 +36,7 @@ class EmoteCommand(commands.Cog):
         collection.delete_many({"message_type": "embed"}) 
 
     def remove_previous_page_document():
-        collection.remove({"current_pg": 1})
+        collection.remove({"page": "page"})
 
     def get_sorted_emotes_and_its_values_to_list(sorted_emotes, list_size):
         x = 0
@@ -76,7 +76,7 @@ class EmoteCommand(commands.Cog):
                                     "total_count": total_count})
 
     def insert_new_page_document(list_size):
-        collection.insert_one({"max_pgs": list_size, "current_pg": 1})
+        collection.insert_one({"page": "page" ,"max_pgs": list_size, "current_pg": 1})
     
     def get_first_page_document_values():
         first_pg_document = collection.find({"pg_num": 1}, {"_id": 0})
@@ -127,7 +127,7 @@ class EmoteCommand(commands.Cog):
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
             if (collection.count_documents({"message_type": "embed"}) > 0):
                 EmoteCommand.remove_previous_embed_documents()
-            if (collection.count_documents({"current_pg": 1}) > 0):
+            if (collection.count_documents({"page": "page"}) > 0):
                 EmoteCommand.remove_previous_page_document()
             list_size = math.ceil(len(list_of_emojis) / 10)
             sorted_emotes_in_tens, sorted_emotes_values_in_tens = EmoteCommand.get_sorted_emotes_and_its_values_to_list(sorted_emotes, list_size)

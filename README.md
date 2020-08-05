@@ -14,10 +14,15 @@ Moji is a Discord bot which tracks custom emojis usage. It can track both non-an
 </div>
 <br/>
 
+## To-do List
+- [ ] Load in the server emojis to the database when it loads instead of calling !emotes for the first time
+- [ ] Update the database whenever an emoji is added or remove
+- [ ] Change the emoji name in the database when the name change as long as the emoji id is the same  
+
 ## Commands
 Prefix: !
 
----
+
 ## Commands Usage
 *   !emotes
      

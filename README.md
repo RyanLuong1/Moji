@@ -31,6 +31,7 @@ Setting up the bot requires yourself to host it.
 * [discord.py](https://github.com/Rapptz/discord.py)
 * [pymongo](https://api.mongodb.com/python/current/installation.html)
 
+```pip install -r requirements.txt```
 ### MongoDB Setup
 
 1. Go to [MongoDB](https://www.mongodb.com/)

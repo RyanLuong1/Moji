@@ -20,6 +20,7 @@ Moji is a Discord bot which tracks custom emojis usage. It can track both non-an
 - [ ] Update the database whenever an emoji is added or remove
 - [ ] Change the emoji name in the database when the name change as long as the emoji id is the same  
 - [ ] Optimize if possible
+- [ ] Add installation setup for Windows
   
 </br>
 

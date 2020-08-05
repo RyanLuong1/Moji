@@ -19,15 +19,20 @@ Moji is a Discord bot which tracks custom emojis usage. It can track both non-an
 - [ ] Update the database whenever an emoji is added or remove
 - [ ] Change the emoji name in the database when the name change as long as the emoji id is the same  
 
+</br>
+
 ## Commands
 Prefix: !
 
+</br>
 
 ## Commands Usage
 *   !emotes
      
      Displays all of the server emojis name and its count sorted in descending order. If there are emojis with duplicate counts, then the emojis name is used to sort it.
----
+
+</br>
+
 ## Setup
 Setting up the bot requires yourself to host it.
 
@@ -88,6 +93,8 @@ For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo
 #### Running Moji
 1. Go to the bot directory and type ```python3 emojibot.py```
 2. Go to your server and type ```!emotes``` to load the emojis into your database.
+
+</br>
 
 ## Troubleshooting
 

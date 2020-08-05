@@ -87,6 +87,7 @@ For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo
 
 #### Running Moji
 1. Go to the bot directory and type ```python3 emojibot.py```
+2. Go to your server and type ```!emotes``` to load the emojis into your database.
 
 ## Troubleshooting
 

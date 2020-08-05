@@ -31,6 +31,8 @@ Setting up the bot requires yourself to host it.
 * [discord.py](https://github.com/Rapptz/discord.py)
 * [pymongo](https://api.mongodb.com/python/current/installation.html)
 
+For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo```
+
 ### MongoDB Setup
 
 1. Go to [MongoDB](https://www.mongodb.com/)
@@ -61,7 +63,7 @@ Setting up the bot requires yourself to host it.
 
 ### Moji Setup (Linux)
 1. Open terminal and type ```git clone https://github.com/RyanLuong1/Moji.git```
-2. Change your directory to the bot directory ```cd /Moji``` and type ```pip install -r requirements.txt```.
+2. Change your directory to the bot directory ```cd /Moji``` and type ```pip3 install -r requirements.txt```.
 3. In the same directory, create a new file ```.env``` by typing ```touch .env``` and opening it through the terminal or through your preferred text editor. It should contain the following:
    ```
      DISCORD_TOKEN= "YOUR_DISCORD_TOKEN"

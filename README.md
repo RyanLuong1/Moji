@@ -83,3 +83,12 @@ For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo
 #### Running Moji
 1. Go to the bot directory and type ```python3 emojibot.py```
 
+## Troubleshooting
+
+```TypeError: __new__() got an unexpected keyword argument 'deny_new'```
+
+[Solution](https://stackoverflow.com/questions/63027848/discord-py-glitch-or-random-error-typeerror-new-got-an-unexpected-keywor). Discord most likely have updated discord.py. Type ```python3 -m pip install -U discord.py```
+
+```TypeError: __init__() got an unexpected keyword argument 'requote'```
+
+[Solution](https://github.com/Rapptz/discord.py/issues/5162). Read Rapptz's response. Type ```pip3 install -U yarl==1.4.2```

@@ -4,21 +4,23 @@
 
 ![moji-01](https://user-images.githubusercontent.com/47546985/89359073-d029ab00-d679-11ea-833b-f00106046a2d.png)
 </div>
+</br>
 
 ## Description
----
+
 Moji is a Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 
 <div align="center">
 
-![moji_gif](https://user-images.githubusercontent.com/47546985/89358895-5db8cb00-d679-11ea-9524-77b558852a5a.gif)
+![moji_gif](https://user-images.githubusercontent.com/47546985/89458679-4383f900-d71c-11ea-85aa-1d0cb9c3cbd3.gif)
 </div>
-<br/>
+</br>
 
 ## To-do List
 - [ ] Load in the server emojis to the database when it loads instead of calling !emotes for the first time
 - [ ] Update the database whenever an emoji is added or remove
 - [ ] Change the emoji name in the database when the name change as long as the emoji id is the same  
-
+- [ ] Optimize if possible
+  
 </br>
 
 ## Commands

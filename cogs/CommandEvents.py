@@ -13,6 +13,10 @@ class CommandEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def insert_new_emoji_to_database(emoji_name, emoji_id):
+        entry = {"emoji_name": emoji_name ,"emoji_id": emoji_id, "count": 0}
+        collection.insert_one(entry)
+
     def increment_emoji_count(emoji_id):
         field = collection.find({"emoji_id": emoji_id}, {"_id": 0})
         for value in field:
@@ -55,7 +59,7 @@ class CommandEvents(commands.Cog):
     def create_embed_message(total_count, usage_activity, new_pg, max_pgs):
         embed = discord.Embed(
             title = "Emotes",
-            description = f'Total Count: {total_count}\n Usage Activity: {usage_activity}',
+            description = f'Total Count: {total_count:,}\n Usage Activity: {usage_activity}',
             colour = discord.Colour.blue()
         )
         embed.set_footer(text=f'Page: {new_pg}/{max_pgs}')
@@ -67,12 +71,17 @@ class CommandEvents(commands.Cog):
             emoji = bot.get_emoji(sorted_emotes[i])
             count = sorted_emotes_values[i]
             position = ((new_pg - 1) * 10) + (i + 1)
-            embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count}', inline=False)
+            embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count:,}', inline=False)
         return embed
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Ryan breaking the bot 24/7"))
+        guild = self.bot.guilds[0]
+        emojis_list = guild.emojis
+        for emoji in emojis_list:
+            if (collection.count_documents({"emoji_id": emoji.id}) == 0):
+                CommandEvents.insert_new_emoji_to_database(emoji.name, emoji.id)
+        await self.bot.change_presence(activity = discord.Game(name="Mass Effect"))
     
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):

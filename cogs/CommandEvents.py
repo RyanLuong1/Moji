@@ -16,9 +16,24 @@ class CommandEvents(commands.Cog):
     def insert_new_emoji_to_database(emoji_name, emoji_id):
         entry = {"emoji_name": emoji_name ,"emoji_id": emoji_id, "count": 0}
         collection.insert_one(entry)
-
+    
+    def remove_emoji_from_database(emoji_id):
+        collection.remove({"emoji_id": emoji_id})
+        
     def get_new_emoji(emojis_list_after):
         return emojis_list_after[-1]
+    
+    def get_removed_emoji(emojis_list_before, emojis_list_after):
+        if emojis_list_before[0] not in emojis_list_after:
+            removed_emoji = emojis_list_before[0]
+        elif emojis_list_before[-1] not in emojis_list_after:
+            removed_emoji = emojis_list_before[-1]
+        else:
+            for emoji in emojis_list_before:
+                if emoji not in emojis_list_after:
+                    removed_emoji = emoji
+                    break
+        return removed_emoji
 
     def increment_emoji_count(emoji_id):
         field = collection.find({"emoji_id": emoji_id}, {"_id": 0})
@@ -94,15 +109,7 @@ class CommandEvents(commands.Cog):
             new_emoji = CommandEvents.get_new_emoji(emojis_list_after)
             CommandEvents.insert_new_emoji_to_database(new_emoji.name, new_emoji.id)
         elif old_list_size > updated_list_size:
-            if emojis_list_before[0] not in emojis_list_after:
-                removed_emoji = emojis_list_before[0]
-            elif emojis_list_before[-1] not in emojis_list_after:
-                removed_emoji = emojis_list_before[-1]
-            else:
-                for emoji in emojis_list_before:
-                    if emoji not in emojis_list_after:
-                        removed_emoji = emoji
-                        break
+            removed_emoji = CommandEvents.get_removed_emoji(emojis_list_before, emojis_list_after)
             collection.remove({"emoji_id": removed_emoji.id})    
 
     @commands.Cog.listener()

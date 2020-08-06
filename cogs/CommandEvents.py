@@ -6,8 +6,8 @@ import re
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes_db']
-collection = db['emotes_collection']
+db = cluster['emotes']
+collection = db['emotes']
 
 class CommandEvents(commands.Cog):
     def __init__(self, bot):
@@ -73,6 +73,16 @@ class CommandEvents(commands.Cog):
             position = ((new_pg - 1) * 10) + (i + 1)
             embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count:,}', inline=False)
         return embed
+
+    @commands.Cog.listener()
+    async def on_guild_emojis_update(self, guild, emojis_list_before, emojis_list_after):
+        old_list_size = len(emojis_list_before)
+        updated_list_size = len(emojis_list_after)
+        if updated_list_size > old_list_size:
+            last_index = updated_list_size - 1
+            new_emoji = emojis_list_after[last_index]
+
+
 
     @commands.Cog.listener()
     async def on_ready(self):

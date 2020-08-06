@@ -102,11 +102,6 @@ class EmoteCommand(commands.Cog):
             count = emojis_values_list[i]
             embed.add_field(name=emoji.name, value=f'{1+i}. {emoji}: {count:,}', inline=False)
         return embed
-        
-    """
-    (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
-    (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
-    """
 
     @commands.command(name="reset")
     async def reset(self, ctx):
@@ -116,15 +111,17 @@ class EmoteCommand(commands.Cog):
         else:
             await ctx.send("Sorry! Only Ryan has access to it")
 
+    """
+    (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names
+    (-x[1], (bot.get_emoji(x[0]).name)).lower())) -> Sort the dict by value in descending order then by the lowercase version of the emojis names in ascending order
+    """
+
     @commands.command(name='emotes')
     async def emotes(self ,ctx):
         list_of_emojis = ctx.guild.emojis
         if not list_of_emojis:
             await ctx.send(f'Your server does not have any custom emotes!')
         else:
-            for emoji in list_of_emojis:
-                if (collection.count_documents({"emoji_id": emoji.id}) == 0):
-                    EmoteCommand.insert_new_emoji_to_database(emoji.name, emoji.id)
             emojis_dict = EmoteCommand.create_emojis_dictionary(list_of_emojis)
             sorted_emotes = OrderedDict(sorted(emojis_dict.items(), key=lambda x: (-x[1], (self.bot.get_emoji(x[0]).name).lower())))
             if (collection.count_documents({"message_type": "embed"}) > 0):

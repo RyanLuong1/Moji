@@ -88,14 +88,18 @@ class CommandEvents(commands.Cog):
         old_list_size = len(emojis_list_before)
         updated_list_size = len(emojis_list_after)
         if updated_list_size > old_list_size:
-            last_index = updated_list_size - 1
-            new_emoji = emojis_list_after[last_index]
+            new_emoji = emojis_list_after[-1]
             collection.insert_one({"emoji_name": new_emoji.name, "emoji_id": new_emoji.id, "count": 0})
         elif old_list_size > updated_list_size:
-            for emoji in emojis_list_before:
-                if emoji not in emojis_list_after:
-                    removed_emoji = emoji
-                    break
+            if emojis_list_before[0] not in emojis_list_after:
+                removed_emoji = emojis_list_before[0]
+            elif emojis_list_before[-1] not in emojis_list_after:
+                removed_emoji = emojis_list_before[-1]
+            else:
+                for emoji in emojis_list_before:
+                    if emoji not in emojis_list_after:
+                        removed_emoji = emoji
+                        break
             collection.remove({"emoji_id": removed_emoji.id})    
 
     @commands.Cog.listener()

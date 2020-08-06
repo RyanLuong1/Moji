@@ -95,7 +95,8 @@ class CommandEvents(commands.Cog):
             for emoji in emojis_list_before:
                 if emoji not in emojis_list_after:
                     removed_emoji = emoji
-                    break    
+                    break
+            collection.remove({"emoji_id": removed_emoji.id})    
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):

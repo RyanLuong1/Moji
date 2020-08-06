@@ -81,6 +81,11 @@ class CommandEvents(commands.Cog):
         if updated_list_size > old_list_size:
             last_index = updated_list_size - 1
             new_emoji = emojis_list_after[last_index]
+        elif old_list_size > updated_list_size:
+            for emoji in emojis_list_before:
+                if emoji not in emojis_list_after:
+                    removed_emoji = emoji
+                    break
 
 
 

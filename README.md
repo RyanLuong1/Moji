@@ -16,7 +16,7 @@ Moji is a Discord bot which tracks custom emojis usage. It can track both non-an
 </br>
 
 ## To-do List
-- [ ] Load in the server emojis to the database when it loads instead of calling !emotes for the first time
+- [x] Load in the server emojis to the database when it loads instead of calling !emotes for the first time
 - [ ] Update the database whenever an emoji is added or remove
 - [ ] Change the emoji name in the database when the name change as long as the emoji id is the same  
 - [ ] Optimize if possible
@@ -60,7 +60,7 @@ For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo
 10. Pick your operating system and download Mongodb Compass.
 11. Copy your connection string and replace <password> with the password you created from step 8.
 12. Open Mongodb Compass and paste your connection string and connect.
-13. Click the ```CREATE DATABASE``` button and name your database and collection. Remember the database and collection name as you will need it for later steps.
+13. Click the ```CREATE DATABASE``` button and name your database and collection **(Optional)**
 
 ### Discord Bot Setup
 1. Go to [Discord Developer Portal](https://discord.com/developers). 
@@ -83,19 +83,18 @@ For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo
      CONNECTION_URL= "YOUR_CONNECTION_STRING
    ```
 4. Replace ```"YOUR_DISCORD_TOKEN"``` and ```"YOUR_CONNECTION_STRING"``` with their respective token and connection string
-5. Open ```CommandEvents.py``` and ```EmoteCommand.py``` and replace ```YOUR_DATABASE_NAME``` and ```YOUR_COLLECTION_NAME``` with your respective database and collection name.
+5. Open ```CommandEvents.py``` and ```EmoteCommand.py``` and replace ```emotes_db``` and ```emotes_collection``` with your respective database and collection name. **(Only do this if you gave your database and collection a name. Otherwise, a database named "emotes_db" and a collection named "emotes_collection" will be created and shown in MongoDB Compass)**
 
 >```DISCORD_TOKEN``` is from step 10 of ```Discord Bot Setup```
 
 >```CONNECTION_URL``` is from step 12 of ```MongoDB Setup```
 
->```YOUR_DATABASE_NAME``` is from step 13 of ```MongoDB Setup```
+>Your respective database name is from step 13 of ```MongoDB Setup```
 
->```YOUR_COLLECTION_NAME``` is from step 13 of ```MongoDB Setup```
+>Your respective collection name is from step 13 of ```MongoDB Setup```
 
 #### Running Moji
-1. Go to the bot directory and type ```python3 emojibot.py```
-2. Go to your server and type ```!emotes``` to load the emojis into your database.
+1. Go to the bot directory and type ```python3 emojibot.py```. Now your emojis are loaded to the database and ready for its count to be collected by Moji as long as it is online.
 
 </br>
 

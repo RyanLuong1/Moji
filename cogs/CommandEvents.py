@@ -20,17 +20,17 @@ class CommandEvents(commands.Cog):
     def remove_emoji_from_database(emoji_id):
         collection.remove({"emoji_id": emoji_id})
         
-    def get_new_emoji(emojis_list_after):
-        return emojis_list_after[-1]
+    def get_new_emoji(new_emojis_list):
+        return new_emojis_list[-1]
     
-    def get_removed_emoji(emojis_list_before, emojis_list_after):
-        if emojis_list_before[0] not in emojis_list_after:
-            removed_emoji = emojis_list_before[0]
-        elif emojis_list_before[-1] not in emojis_list_after:
-            removed_emoji = emojis_list_before[-1]
+    def get_removed_emoji(old_emojis_list, new_emojis_list):
+        if old_emojis_list[0] not in new_emojis_list:
+            removed_emoji = old_emojis_list[0]
+        elif old_emojis_list[-1] not in new_emojis_list:
+            removed_emoji = old_emojis_list[-1]
         else:
-            for emoji in emojis_list_before:
-                if emoji not in emojis_list_after:
+            for emoji in old_emojis_list:
+                if emoji not in new_emojis_list:
                     removed_emoji = emoji
                     break
         return removed_emoji
@@ -102,15 +102,20 @@ class CommandEvents(commands.Cog):
         await self.bot.change_presence(activity = discord.Game(name="Mass Effect"))
 
     @commands.Cog.listener()
-    async def on_guild_emojis_update(self, guild, emojis_list_before, emojis_list_after):
-        old_list_size = len(emojis_list_before)
-        updated_list_size = len(emojis_list_after)
-        if updated_list_size > old_list_size:
-            new_emoji = CommandEvents.get_new_emoji(emojis_list_after)
+    async def on_guild_emojis_update(self, guild, old_emojis_list, new_emojis_list):
+        old_list_size = len(old_emojis_list)
+        new_list_size = len(new_emojis_list)
+        if new_list_size > old_list_size:
+            new_emoji = CommandEvents.get_new_emoji(new_emojis_list)
             CommandEvents.insert_new_emoji_to_database(new_emoji.name, new_emoji.id)
-        elif old_list_size > updated_list_size:
-            removed_emoji = CommandEvents.get_removed_emoji(emojis_list_before, emojis_list_after)
-            collection.remove({"emoji_id": removed_emoji.id})    
+        elif old_list_size > new_list_size:
+            removed_emoji = CommandEvents.get_removed_emoji(old_emojis_list, new_emojis_list)
+            collection.remove({"emoji_id": removed_emoji.id})
+        else:
+            for emoji in new_emojis_list:
+                if (collection.count_documents({"emoji_name": emoji.name}) == 0):
+                    collection.update_one({"emoji_id": emoji.id}, {"$set":{"emoji_name": emoji.name}})
+                    break
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):

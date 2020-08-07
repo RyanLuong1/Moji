@@ -26,6 +26,11 @@ class CommandEvents(commands.Cog):
     def get_new_emoji(new_emojis_list):
         return new_emojis_list[-1]
     
+    """
+    Check the first or the last emoji of the old list to see if it is not in the new list
+    before iterating the old list to find the removed emoji
+    """
+    
     def get_removed_emoji(old_emojis_list, new_emojis_list):
         if old_emojis_list[0] not in new_emojis_list:
             removed_emoji = old_emojis_list[0]
@@ -37,6 +42,11 @@ class CommandEvents(commands.Cog):
                     removed_emoji = emoji
                     break
         return removed_emoji
+
+    """
+    Check if the first or the last emoji name is not in the database
+    before iterating the new list to find which emoji name is not in it  
+    """
 
     def get_changed_emoji(new_emojis_list):
         if collection.count_documents({"emoji_name": new_emojis_list[0].name}) == 0:
@@ -115,6 +125,12 @@ class CommandEvents(commands.Cog):
             if (collection.count_documents({"emoji_id": emoji.id}) == 0):
                 CommandEvents.insert_new_emoji_to_database(emoji.name, emoji.id)
         await self.bot.change_presence(activity = discord.Game(name="Mass Effect"))
+
+    """
+    Check 3 conditions: if the new list length is greater, then an emoji was added,
+                        if the old list length is greater, then an emoji was removed,
+                        or if both list lengths are the same, then an emoji name was changed.
+    """
 
     @commands.Cog.listener()
     async def on_guild_emojis_update(self, guild, old_emojis_list, new_emojis_list):

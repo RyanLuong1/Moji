@@ -19,6 +19,9 @@ class CommandEvents(commands.Cog):
     
     def remove_emoji_from_database(emoji_id):
         collection.remove({"emoji_id": emoji_id})
+
+    def update_emoji_name_in_database(emoji):
+        collection.update_one({"emoji_id": emoji.id}, {"$set":{"emoji_name": emoji.name}})
         
     def get_new_emoji(new_emojis_list):
         return new_emojis_list[-1]
@@ -34,6 +37,18 @@ class CommandEvents(commands.Cog):
                     removed_emoji = emoji
                     break
         return removed_emoji
+
+    def get_changed_emoji(new_emojis_list):
+        if collection.count_documents({"emoji_name": new_emojis_list[0].name}) == 0:
+            changed_emoji = new_emojis_list[0]
+        elif collection.count_documents({"emoji_name": new_emojis_list[-1].name}) == 0:
+            changed_emoji = new_emojis_list[-1]
+        else:
+            for emoji in new_emojis_list:
+                if collection.count_documents({"emoji_name": emoji.name}) == 0:
+                    changed_emoji = emoji
+                    break
+        return changed_emoji
 
     def increment_emoji_count(emoji_id):
         field = collection.find({"emoji_id": emoji_id}, {"_id": 0})
@@ -110,17 +125,10 @@ class CommandEvents(commands.Cog):
             CommandEvents.insert_new_emoji_to_database(new_emoji.name, new_emoji.id)
         elif old_list_size > new_list_size:
             removed_emoji = CommandEvents.get_removed_emoji(old_emojis_list, new_emojis_list)
-            collection.remove({"emoji_id": removed_emoji.id})
+            CommandEvents.remove_emoji_from_database(removed_emoji.id)
         else:
-            if collection.count_documents({"emoji_name": new_emojis_list[0].name}) == 0:
-                new_emoji_name = new_emojis_list[0].name
-            elif collection.count_documents({"emoji_name": new_emojis_list[-1].name}) == 0:
-                new_emoji_name = new_emojis_list[-1].name
-            else:
-                for emoji in new_emojis_list:
-                    if collection.count_documents({"emoji_name": emoji.name}) == 0:
-                        new_emoji_name = emoji.name
-                        break
+            changed_emoji = CommandEvents.get_changed_emoji(new_emojis_list)
+            CommandEvents.update_emoji_name_in_database(changed_emoji)
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):

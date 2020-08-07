@@ -3,8 +3,13 @@
 <div align="center">
 
 ![moji-01](https://user-images.githubusercontent.com/47546985/89359073-d029ab00-d679-11ea-833b-f00106046a2d.png)
+
+[![made-with-discord.py](https://img.shields.io/badge/Made%20with-Discord.py-orange)](https://discordpy.readthedocs.io/en/latest/)
+![GitHub](https://img.shields.io/github/license/RyanLuong1/Moji)
+
 </div>
 </br>
+
 
 ## Description
 

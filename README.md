@@ -5,6 +5,7 @@
 ![moji-01](https://user-images.githubusercontent.com/47546985/89359073-d029ab00-d679-11ea-833b-f00106046a2d.png)
 </div>
 </br>
+https://img.shields.io/github/license/RyanLuong1/Moji
 
 ## Description
 

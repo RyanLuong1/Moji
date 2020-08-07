@@ -5,8 +5,8 @@
 ![moji-01](https://user-images.githubusercontent.com/47546985/89359073-d029ab00-d679-11ea-833b-f00106046a2d.png)
 </div>
 </br>
-https://img.shields.io/github/license/RyanLuong1/Moji
-
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://img.shields.io/github/license/RyanLuong1/Moji)
 ## Description
 
 Moji is a Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 

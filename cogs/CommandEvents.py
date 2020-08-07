@@ -112,10 +112,15 @@ class CommandEvents(commands.Cog):
             removed_emoji = CommandEvents.get_removed_emoji(old_emojis_list, new_emojis_list)
             collection.remove({"emoji_id": removed_emoji.id})
         else:
-            for emoji in new_emojis_list:
-                if (collection.count_documents({"emoji_name": emoji.name}) == 0):
-                    collection.update_one({"emoji_id": emoji.id}, {"$set":{"emoji_name": emoji.name}})
-                    break
+            if collection.count_documents({"emoji_name": new_emojis_list[0].name}) == 0:
+                new_emoji_name = new_emojis_list[0].name
+            elif collection.count_documents({"emoji_name": new_emojis_list[-1].name}) == 0:
+                new_emoji_name = new_emojis_list[-1].name
+            else:
+                for emoji in new_emojis_list:
+                    if collection.count_documents({"emoji_name": emoji.name}) == 0:
+                        new_emoji_name = emoji.name
+                        break
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
@@ -124,7 +129,7 @@ class CommandEvents(commands.Cog):
         if user.bot:
             return
         elif not reaction_message.embeds:
-            if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):
+            if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
                 CommandEvents.increment_emoji_count(reaction.emoji.id)
         else:
             if reaction_message.embeds[0].title == "Emotes":
@@ -139,7 +144,7 @@ class CommandEvents(commands.Cog):
                 await reaction.remove(user)
                 await reaction_message.edit(embed=updated_embed)
             else:
-                if (collection.count_documents({"emoji_id": reaction.emoji.id}) != 0):
+                if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
                     CommandEvents.increment_emoji_count(reaction.emoji.id)
 
     """
@@ -153,7 +158,7 @@ class CommandEvents(commands.Cog):
             return
         list_of_emojis_ids = re.findall(r"(\d+.)\>", str(message.content))
         for emoji_id in list_of_emojis_ids:
-            if (collection.count_documents({"emoji_id": int(emoji_id)}) != 0):
+            if collection.count_documents({"emoji_id": int(emoji_id)}) != 0:
                 CommandEvents.increment_emoji_count(int(emoji_id))
 
     

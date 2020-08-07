@@ -13,12 +13,12 @@ class CommandEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def insert_new_emoji_to_database(emoji_name, emoji_id):
-        entry = {"emoji_name": emoji_name ,"emoji_id": emoji_id, "count": 0}
+    def insert_new_emoji_to_database(emoji):
+        entry = {"emoji_name": emoji.name ,"emoji_id": emoji.id, "count": 0}
         collection.insert_one(entry)
     
-    def remove_emoji_from_database(emoji_id):
-        collection.remove({"emoji_id": emoji_id})
+    def remove_emoji_from_database(emoji):
+        collection.remove({"emoji_id": emoji.id})
 
     def update_emoji_name_in_database(emoji):
         collection.update_one({"emoji_id": emoji.id}, {"$set":{"emoji_name": emoji.name}})
@@ -50,12 +50,12 @@ class CommandEvents(commands.Cog):
                     break
         return changed_emoji
 
-    def increment_emoji_count(emoji_id):
-        field = collection.find({"emoji_id": emoji_id}, {"_id": 0})
+    def increment_emoji_count(emoji):
+        field = collection.find({"emoji_id": emoji.id}, {"_id": 0})
         for value in field:
             count = value["count"]
         count += 1
-        collection.update_one({"emoji_id": emoji_id}, {"$set":{"count": count}})
+        collection.update_one({"emoji_id": emoji.id}, {"$set":{"count": count}})
     
     def get_current_and_max_pages():
         page_document = collection.find({"current_pg": {'$exists': 'true'}})
@@ -122,10 +122,10 @@ class CommandEvents(commands.Cog):
         new_list_size = len(new_emojis_list)
         if new_list_size > old_list_size:
             new_emoji = CommandEvents.get_new_emoji(new_emojis_list)
-            CommandEvents.insert_new_emoji_to_database(new_emoji.name, new_emoji.id)
+            CommandEvents.insert_new_emoji_to_database(new_emoji)
         elif old_list_size > new_list_size:
             removed_emoji = CommandEvents.get_removed_emoji(old_emojis_list, new_emojis_list)
-            CommandEvents.remove_emoji_from_database(removed_emoji.id)
+            CommandEvents.remove_emoji_from_database(removed_emoji)
         else:
             changed_emoji = CommandEvents.get_changed_emoji(new_emojis_list)
             CommandEvents.update_emoji_name_in_database(changed_emoji)
@@ -138,7 +138,7 @@ class CommandEvents(commands.Cog):
             return
         elif not reaction_message.embeds:
             if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                CommandEvents.increment_emoji_count(reaction.emoji.id)
+                CommandEvents.increment_emoji_count(reaction.emoji)
         else:
             if reaction_message.embeds[0].title == "Emotes":
                 current_pg, max_pgs = CommandEvents.get_current_and_max_pages()
@@ -153,7 +153,7 @@ class CommandEvents(commands.Cog):
                 await reaction_message.edit(embed=updated_embed)
             else:
                 if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                    CommandEvents.increment_emoji_count(reaction.emoji.id)
+                    CommandEvents.increment_emoji_count(reaction.emoji)
 
     """
     Discord bots write emotes as <:name_of_emotes:#>.
@@ -167,7 +167,8 @@ class CommandEvents(commands.Cog):
         list_of_emojis_ids = re.findall(r"(\d+.)\>", str(message.content))
         for emoji_id in list_of_emojis_ids:
             if collection.count_documents({"emoji_id": int(emoji_id)}) != 0:
-                CommandEvents.increment_emoji_count(int(emoji_id))
+                emoji = self.bot.get_emoji(int(emoji_id))
+                CommandEvents.increment_emoji_count(emoji)
 
     
 def setup(bot):

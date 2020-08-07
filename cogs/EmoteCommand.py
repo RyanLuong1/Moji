@@ -7,20 +7,13 @@ import math
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes_db']
-collection = db['emotes_collection']
+db = cluster['emotes']
+collection = db['emotes']
 
 
 class EmoteCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    def reset_database():
-        collection.remove({})
-
-    def insert_new_emoji_to_database(emoji_name, emoji_id):
-        entry = {"emoji_name": emoji_name ,"emoji_id": emoji_id, "count": 0}
-        collection.insert_one(entry)
     
     def create_emojis_dictionary(list_of_emojis):
         emojis_dict = {}
@@ -102,14 +95,6 @@ class EmoteCommand(commands.Cog):
             count = emojis_values_list[i]
             embed.add_field(name=emoji.name, value=f'{1+i}. {emoji}: {count:,}', inline=False)
         return embed
-
-    @commands.command(name="reset")
-    async def reset(self, ctx):
-        if (ctx.message.author.id == 168194032600743936):
-            EmoteCommand.reset_database()
-            await ctx.send("Database reset!")
-        else:
-            await ctx.send("Sorry! Only Ryan has access to it")
 
     """
     (bot.get_emoji(x[0]).name).lower() -> Gets the lowercase version of the emojis names

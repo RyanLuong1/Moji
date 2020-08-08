@@ -60,10 +60,10 @@ For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo
 5. Pick a cloud provider and a region closest to you. This may take a few minutes.
 6. Click the ```CONNECT``` button
 7. Click the ```Add Your Current IP Address``` button and click the ```Add IP Address```
-8. Go to ```Create a Database User``` and create your username and your password. Remember your username and your password as you will need it for later steps.
+8. Go to ```Create a Database User``` and create your username and your password. Remember your username and your password as you will need it for step 8.
 9. Click ```Choose a connection method``` button and choose ```Connect using MongoDB Compass``` button
 10. Pick your operating system and download Mongodb Compass.
-11. Copy your connection string and replace <password> with the password you created from step 8.
+11. Copy your connection string and replace ```password``` with the password you created from step 8.
 12. Open Mongodb Compass and paste your connection string and connect.
 13. Click the ```CREATE DATABASE``` button and name your database and collection **(Optional)**
 
@@ -85,7 +85,7 @@ For pymongo, use ```python3 -m pip install pymongo``` or ```pip3 install pymongo
 3. In the same directory, create a new file ```.env``` by typing ```touch .env``` and opening it through the terminal or through your preferred text editor. It should contain the following:
    ```
      DISCORD_TOKEN= "YOUR_DISCORD_TOKEN"
-     CONNECTION_URL= "YOUR_CONNECTION_STRING
+     CONNECTION_URL= "YOUR_CONNECTION_STRING"
    ```
 4. Replace ```"YOUR_DISCORD_TOKEN"``` and ```"YOUR_CONNECTION_STRING"``` with their respective token and connection string
 5. Open ```CommandEvents.py``` and ```EmoteCommand.py``` and replace ```emotes_db``` and ```emotes_collection``` with your respective database and collection name. **(Only do this if you gave your database and collection a name. Otherwise, a database named "emotes_db" and a collection named "emotes_collection" will be created and shown in MongoDB Compass)**

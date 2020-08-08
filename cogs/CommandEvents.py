@@ -123,7 +123,7 @@ class CommandEvents(commands.Cog):
         emojis_list = guild.emojis
         for emoji in emojis_list:
             if (collection.count_documents({"emoji_id": emoji.id}) == 0):
-                CommandEvents.insert_new_emoji_to_database(emoji.name, emoji.id)
+                CommandEvents.insert_new_emoji_to_database(emoji)
         await self.bot.change_presence(activity = discord.Game(name="Mass Effect"))
 
     """
@@ -146,30 +146,43 @@ class CommandEvents(commands.Cog):
             changed_emoji = CommandEvents.get_changed_emoji(new_emojis_list)
             CommandEvents.update_emoji_name_in_database(changed_emoji)
 
+    """
+    The embed message will flip the page if and only if
+    1. The message contains embeds/an embed
+    2. The first embed's title in the message is "Emotes"
+    3. AND the emoji reacted is either '◀️' or '▶️'
+    If one of these conditions fails, then the reacted emoji will be check
+    if it exists in the database before incrementing its count.
+    """
+
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         bot = self.bot
         reaction_message = reaction.message
         if user.bot:
             return
-        elif not reaction_message.embeds:
-            if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                CommandEvents.increment_emoji_count(reaction.emoji)
-        else:
+        elif reaction_message.embeds:
             if reaction_message.embeds[0].title == "Emotes":
-                current_pg, max_pgs = CommandEvents.get_current_and_max_pages()
-                if reaction.emoji == '◀️':
-                    new_pg = CommandEvents.go_back_a_page(current_pg, max_pgs)
-                elif reaction.emoji == '▶️':
-                    new_pg = CommandEvents.go_to_next_page(current_pg, max_pgs)
-                sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(new_pg)
-                embed = CommandEvents.create_embed_message(total_count, usage_activity, new_pg, max_pgs)
-                updated_embed = CommandEvents.update_embed_with_emoji_info(bot, embed, sorted_emotes, sorted_emotes_values, new_pg)
-                await reaction.remove(user)
-                await reaction_message.edit(embed=updated_embed)
+                if reaction.emoji == '◀️' or reaction.emoji == '▶️':
+                    current_pg, max_pgs = CommandEvents.get_current_and_max_pages()
+                    if reaction.emoji == '◀️':
+                        new_pg = CommandEvents.go_back_a_page(current_pg, max_pgs)
+                    elif reaction.emoji == '▶️':
+                        new_pg = CommandEvents.go_to_next_page(current_pg, max_pgs)
+                    sorted_emotes, sorted_emotes_values, usage_activity, total_count = CommandEvents.get_new_page_document_values(new_pg)
+                    embed = CommandEvents.create_embed_message(total_count, usage_activity, new_pg, max_pgs)
+                    updated_embed = CommandEvents.update_embed_with_emoji_info(bot, embed, sorted_emotes, sorted_emotes_values, new_pg)
+                    await reaction.remove(user)
+                    await reaction_message.edit(embed=updated_embed)
+                else:
+                    if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
+                        CommandEvents.increment_emoji_count(reaction.emoji)
             else:
                 if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
                     CommandEvents.increment_emoji_count(reaction.emoji)
+        else:
+            if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
+                CommandEvents.increment_emoji_count(reaction.emoji)
 
     """
     Discord bots write emotes as <:name_of_emotes:#>.

@@ -7,8 +7,8 @@ import math
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes']
-collection = db['emotes']
+db = cluster['emotes_db']
+collection = db['emotes_db']
 
 
 class EmoteCommand(commands.Cog):
@@ -71,13 +71,11 @@ class EmoteCommand(commands.Cog):
     def insert_new_page_document(list_size):
         collection.insert_one({"page": "page" ,"max_pgs": list_size, "current_pg": 1})
     
-    def get_first_page_document_values():
-        first_pg_document = collection.find({"pg_num": 1}, {"_id": 0})
-        for fields in first_pg_document:
-            pg_num = fields["pg_num"]
-            emojis_list = fields["sorted_emotes"]
-            emojis_values_list = fields["sorted_emotes_values"]
-            usage_activity = fields["usage_activity"]
+    def get_first_page_values(sorted_emotes_in_tens, sorted_emotes_values_in_tens, usage_list):
+        pg_num = 1
+        emojis_list = sorted_emotes_in_tens[0]
+        emojis_values_list = sorted_emotes_values_in_tens[0]
+        usage_activity = usage_list[0]
         return pg_num, emojis_list, emojis_values_list, usage_activity
     
     def create_embed_message(total_count, usage_activity, pg_num, list_size):
@@ -118,7 +116,7 @@ class EmoteCommand(commands.Cog):
             usage_list, total_count = EmoteCommand.get_usage_and_total_count_to_list(sorted_emotes, list_size)
             EmoteCommand.create_embed_documents(sorted_emotes_in_tens, sorted_emotes_values_in_tens, usage_list, total_count, list_size)
             EmoteCommand.insert_new_page_document(list_size)
-            pg_num, emojis_list, emojis_values_list, usage_activity = EmoteCommand.get_first_page_document_values()
+            pg_num, emojis_list, emojis_values_list, usage_activity = EmoteCommand.get_first_page_values(sorted_emotes_in_tens, sorted_emotes_values_in_tens, usage_list)
             embed = EmoteCommand.create_embed_message(total_count, usage_activity, pg_num, list_size)
             updated_embed = EmoteCommand.update_embed_message_with_emojis_info(self.bot, embed, emojis_list, emojis_values_list)
             reaction_message = await ctx.send(embed=updated_embed)

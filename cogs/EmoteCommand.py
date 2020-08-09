@@ -8,8 +8,8 @@ import math
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes']
-collection = db['emotes']
+db = cluster['emotes_db']
+collection = db['emotes_collection']
 
 
 class EmoteCommand(commands.Cog):

@@ -1,13 +1,14 @@
 from discord.ext import commands
 from Connection import Connect
 from pymongo import MongoClient
+from timeit import default_timer as timer
 
 import re
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes_db']
-collection = db['emotes_collection']
+db = cluster['emotes']
+collection = db['emotes']
 
 class CommandEvents(commands.Cog):
     def __init__(self, bot):
@@ -60,11 +61,10 @@ class CommandEvents(commands.Cog):
                     break
         return changed_emoji
 
-    def increment_emoji_count(emoji):
+    def increment_emoji_count(emoji, count):
         field = collection.find({"emoji_id": emoji.id}, {"_id": 0})
         for value in field:
-            count = value["count"]
-        count += 1
+            count += value["count"] 
         collection.update_one({"emoji_id": emoji.id}, {"$set":{"count": count}})
     
     def get_current_and_max_pages():
@@ -188,16 +188,25 @@ class CommandEvents(commands.Cog):
     Discord bots write emotes as <:name_of_emotes:#>.
     Parsing the message to get the emojis ids is better since ids are unique, but names are not 
     Find the emojis ids by using the following pattern, a group of numbers that ends with a >.
+    Creating a dictionary reduces the amount of times it needs to call the database if there are duplicate values.
     """
+    
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.bot.user:
             return
+        start = timer()
         list_of_emojis_ids = re.findall(r"(\d+.)\>", str(message.content))
+        emojis_id_dict = {}
         for emoji_id in list_of_emojis_ids:
-            if collection.count_documents({"emoji_id": int(emoji_id)}) != 0:
-                emoji = self.bot.get_emoji(int(emoji_id))
-                CommandEvents.increment_emoji_count(emoji)
+            id = int(emoji_id)
+            emojis_id_dict[id] = emojis_id_dict.get(id, 1) + 1
+        for emoji_id, count in emojis_id_dict.items():
+            if collection.count_documents({"emoji_id": emoji_id}) != 0:
+                emoji = self.bot.get_emoji(emoji_id)
+                CommandEvents.increment_emoji_count(emoji, count)
+        end = timer()
+        print(end - start)
 
     
 def setup(bot):

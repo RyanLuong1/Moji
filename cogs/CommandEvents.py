@@ -60,11 +60,10 @@ class CommandEvents(commands.Cog):
                     break
         return changed_emoji
 
-    def increment_emoji_count(emoji):
+    def increment_emoji_count(emoji, count):
         field = collection.find({"emoji_id": emoji.id}, {"_id": 0})
         for value in field:
-            count = value["count"]
-        count += 1
+            count += value["count"] 
         collection.update_one({"emoji_id": emoji.id}, {"$set":{"count": count}})
     
     def get_current_and_max_pages():
@@ -114,7 +113,7 @@ class CommandEvents(commands.Cog):
             emoji = bot.get_emoji(sorted_emotes[i])
             count = sorted_emotes_values[i]
             position = ((new_pg - 1) * 10) + (i + 1)
-            embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count:,}', inline=False)
+            embed.add_field(name=emoji.name, value=f'{position}. {emoji}: {count:,}', inline=False)
         return embed
 
     @commands.Cog.listener()
@@ -122,7 +121,7 @@ class CommandEvents(commands.Cog):
         guild = self.bot.guilds[0]
         emojis_list = guild.emojis
         for emoji in emojis_list:
-            if (collection.count_documents({"emoji_id": emoji.id}) == 0):
+            if collection.count_documents({"emoji_id": emoji.id}) == 0:
                 CommandEvents.insert_new_emoji_to_database(emoji)
         await self.bot.change_presence(activity = discord.Game(name="Mass Effect"))
 
@@ -176,28 +175,37 @@ class CommandEvents(commands.Cog):
                     await reaction_message.edit(embed=updated_embed)
                 else:
                     if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                        CommandEvents.increment_emoji_count(reaction.emoji)
+                        count = 1
+                        CommandEvents.increment_emoji_count(reaction.emoji, count)
             else:
                 if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                    CommandEvents.increment_emoji_count(reaction.emoji)
+                    count = 1
+                    CommandEvents.increment_emoji_count(reaction.emoji, count)
         else:
             if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                CommandEvents.increment_emoji_count(reaction.emoji)
+                count = 1
+                CommandEvents.increment_emoji_count(reaction.emoji, count)
 
     """
     Discord bots write emotes as <:name_of_emotes:#>.
     Parsing the message to get the emojis ids is better since ids are unique, but names are not 
     Find the emojis ids by using the following pattern, a group of numbers that ends with a >.
+    Creating a dictionary reduces the amount of times it needs to call the database if there are duplicate values.
     """
+    
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.bot.user:
             return
         list_of_emojis_ids = re.findall(r"(\d+.)\>", str(message.content))
+        emojis_id_dict = {}
         for emoji_id in list_of_emojis_ids:
-            if collection.count_documents({"emoji_id": int(emoji_id)}) != 0:
-                emoji = self.bot.get_emoji(int(emoji_id))
-                CommandEvents.increment_emoji_count(emoji)
+            id = int(emoji_id)
+            emojis_id_dict[id] = emojis_id_dict.get(id, 0) + 1
+        for emoji_id, count in emojis_id_dict.items():
+            if collection.count_documents({"emoji_id": emoji_id}) != 0:
+                emoji = self.bot.get_emoji(emoji_id)
+                CommandEvents.increment_emoji_count(emoji, count)
 
     
 def setup(bot):

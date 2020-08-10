@@ -18,12 +18,12 @@ class EmoteCommand(commands.Cog):
     
     def create_emojis_dictionary(list_of_emojis):
         emojis_dict = {}
-        for emoji in list_of_emojis:
-            document = collection.find({"emoji_id": emoji.id}, {"_id": 0})
-            for fields in document:
-                emoji_id = fields["emoji_id"]
-                count = fields["count"]
-            emojis_dict.update({emoji_id: count})
+        emoji_id = collection.distinct("emoji_id")
+        all_emoji_count = collection.find({"count": {"$gt": -1}}, {"_id": 0, "emoji_name": 0, "emoji_id": 0})
+        emoji_count = [count["count"] for count in all_emoji_count]
+        n = len(emoji_id)
+        for i in range(n):
+            emojis_dict.update({emoji_id[i]: emoji_count[i]})
         return emojis_dict
     
     def remove_previous_embed_documents():

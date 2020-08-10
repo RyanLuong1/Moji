@@ -1,14 +1,13 @@
 from discord.ext import commands
 from Connection import Connect
 from pymongo import MongoClient
-from timeit import default_timer as timer
 
 import re
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes']
-collection = db['emotes']
+db = cluster['emotes_db']
+collection = db['emotes_collection']
 
 class CommandEvents(commands.Cog):
     def __init__(self, bot):
@@ -122,7 +121,7 @@ class CommandEvents(commands.Cog):
         guild = self.bot.guilds[0]
         emojis_list = guild.emojis
         for emoji in emojis_list:
-            if (collection.count_documents({"emoji_id": emoji.id}) == 0):
+            if collection.count_documents({"emoji_id": emoji.id}) == 0:
                 CommandEvents.insert_new_emoji_to_database(emoji)
         await self.bot.change_presence(activity = discord.Game(name="Mass Effect"))
 
@@ -198,21 +197,15 @@ class CommandEvents(commands.Cog):
     async def on_message(self, message):
         if message.author == self.bot.user:
             return
-        start = timer()
         list_of_emojis_ids = re.findall(r"(\d+.)\>", str(message.content))
         emojis_id_dict = {}
         for emoji_id in list_of_emojis_ids:
             id = int(emoji_id)
             emojis_id_dict[id] = emojis_id_dict.get(id, 0) + 1
-        for key, value in emojis_id_dict.items():
-            print(key)
-            print(value)
         for emoji_id, count in emojis_id_dict.items():
             if collection.count_documents({"emoji_id": emoji_id}) != 0:
                 emoji = self.bot.get_emoji(emoji_id)
                 CommandEvents.increment_emoji_count(emoji, count)
-        end = timer()
-        print(end - start)
 
     
 def setup(bot):

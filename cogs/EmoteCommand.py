@@ -2,14 +2,13 @@ from discord.ext import commands
 from collections import OrderedDict
 from Connection import Connect
 from pymongo import MongoClient
-from timeit import default_timer as timer
 
 import math
 import discord
 
 cluster = Connect.get_connect()
-db = cluster['emotes']
-collection = db['emotes']
+db = cluster['emotes_db']
+collection = db['emotes_collection']
 
 
 class EmoteCommand(commands.Cog):

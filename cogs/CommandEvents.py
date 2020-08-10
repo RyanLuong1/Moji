@@ -176,13 +176,16 @@ class CommandEvents(commands.Cog):
                     await reaction_message.edit(embed=updated_embed)
                 else:
                     if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                        CommandEvents.increment_emoji_count(reaction.emoji)
+                        count = 1
+                        CommandEvents.increment_emoji_count(reaction.emoji, count)
             else:
                 if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                    CommandEvents.increment_emoji_count(reaction.emoji)
+                    count = 1
+                    CommandEvents.increment_emoji_count(reaction.emoji, count)
         else:
             if collection.count_documents({"emoji_id": reaction.emoji.id}) != 0:
-                CommandEvents.increment_emoji_count(reaction.emoji)
+                count = 1
+                CommandEvents.increment_emoji_count(reaction.emoji, count)
 
     """
     Discord bots write emotes as <:name_of_emotes:#>.
@@ -200,7 +203,10 @@ class CommandEvents(commands.Cog):
         emojis_id_dict = {}
         for emoji_id in list_of_emojis_ids:
             id = int(emoji_id)
-            emojis_id_dict[id] = emojis_id_dict.get(id, 1) + 1
+            emojis_id_dict[id] = emojis_id_dict.get(id, 0) + 1
+        for key, value in emojis_id_dict.items():
+            print(key)
+            print(value)
         for emoji_id, count in emojis_id_dict.items():
             if collection.count_documents({"emoji_id": emoji_id}) != 0:
                 emoji = self.bot.get_emoji(emoji_id)

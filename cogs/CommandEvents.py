@@ -190,7 +190,7 @@ class CommandEvents(commands.Cog):
     Discord bots write emotes as <:name_of_emotes:#>.
     Parsing the message to get the emojis ids is better since ids are unique, but names are not 
     Find the emojis ids by using the following pattern, a group of numbers that ends with a >.
-    Creating a dictionary reduces the amount of times it needs to call the database if there are duplicate values.
+    Creating a dictionary reduces the amount of times it needs to call the database if there are duplicate ids.
     """
     
     @commands.Cog.listener()

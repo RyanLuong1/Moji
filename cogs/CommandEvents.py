@@ -114,7 +114,7 @@ class CommandEvents(commands.Cog):
             emoji = bot.get_emoji(sorted_emotes[i])
             count = sorted_emotes_values[i]
             position = ((new_pg - 1) * 10) + (i + 1)
-            embed.add_field(name=emoji.name, value=f'{position}, {emoji}: {count:,}', inline=False)
+            embed.add_field(name=emoji.name, value=f'{position}. {emoji}: {count:,}', inline=False)
         return embed
 
     @commands.Cog.listener()

@@ -185,4 +185,4 @@ python -m pip install pymongo
 
 ```the dns response does not contain an answer to the question```
 
-[Solution](https://stackoverflow.com/questions/52930341/pymongo-mongodbsrv-dnspython-must-be-installed-error). Make sure the connection string you put in .env is exactly the one you use to connect to MongoDB Compass.
+Make sure the connection string you put in .env is exactly the one you use to connect to MongoDB Compass.

@@ -67,7 +67,7 @@ python3 -m pip install -U discord.py
 python3 -m pip install pymongo
 ```
 
->First two steps are only required if you do not have python 3.6 installed
+>First two steps are only required if you do not have ≥python 3.6 installed
 
 >You don't have to get python 3.6, but any version you install must be 3.6 or higher. If you get python 3.7, then it would be ```sudo apt-get install python3.7``` 
 
@@ -185,4 +185,4 @@ python -m pip install pymongo
 
 ```the dns response does not contain an answer to the question```
 
-[Solution](https://stackoverflow.com/questions/52930341/pymongo-mongodbsrv-dnspython-must-be-installed-error). Type ```pip install pymongo[srv]```
+[Solution](https://stackoverflow.com/questions/52930341/pymongo-mongodbsrv-dnspython-must-be-installed-error). Make sure the connection string you put in .env is exactly the one you use to connect to MongoDB Compass.

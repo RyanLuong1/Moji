@@ -10,19 +10,32 @@
 </div>
 </br>
 
+## Table of Contents
+1. [Description](https://github.com/RyanLuong1/Moji#description)
+2. [Commands](https://github.com/RyanLuong1/Moji#commands)
+3. [Commands Usage](https://github.com/RyanLuong1/Moji#commands-usage)
+4. [Setup](https://github.com/RyanLuong1/Moji#setup)
+   1. [Prerequistes for Linux](https://github.com/RyanLuong1/Moji#prerequistes-for-linux)
+      1. [Installing Prerequistes](https://github.com/RyanLuong1/Moji#installing-prerequistes)
+   2. [Prerequistes for Windows 10](https://github.com/RyanLuong1/Moji#prerequistes-for-windows-10)
+      1. [Installing Prerequistes](https://github.com/RyanLuong1/Moji#installing-prerequistes-1)
+   3. [MongoDB Setup](https://github.com/RyanLuong1/Moji#mongodb-setup)
+   4. [Discord Bot Setup](https://github.com/RyanLuong1/Moji#discord-bot-setup)
+   5. [Moji Setup (Linux)](https://github.com/RyanLuong1/Moji#moji-setup-linux)
+      1. [Running Moji](https://github.com/RyanLuong1/Moji#running-moji)
+   6. [Moji Setup (Windows 10)](https://github.com/RyanLuong1/Moji#moji-setup-windows-10)
+      1. [Running Moji](https://github.com/RyanLuong1/Moji#running-moji-1)
+5. [Troubleshooting (Linux)](https://github.com/RyanLuong1/Moji#troubleshooting-linux)
+6. [Troubleshooting (Windows 10)](https://github.com/RyanLuong1/Moji#troubleshooting-windows-10)
 
 ## Description
 
-Moji is a self hosting Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 
+Moji is a Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 
 <div align="center">
 
 ![moji_gif](https://user-images.githubusercontent.com/47546985/89852438-ae319c00-db43-11ea-989a-1a84f81fe15e.gif)
 </div>
 </br>
-
-## Table of Contents
-1. [Commands](https://github.com/RyanLuong1/Moji#commands)
-2. [Commands Usage](https://github.com/RyanLuong1/Moji#commands-usage)
 
 ## Commands
 Prefix: !
@@ -66,7 +79,7 @@ python3 -m pip install pymongo
 * [pymongo](https://api.mongodb.com/python/current/installation.html)
 * [Git](https://git-scm.com/downloads)
 
-#### Installing Prerequistes
+#### Installing Prerequistes for Windows 10
 
 1. Download the executable on [Python.org](https://www.python.org/downloads/)
 2. Download Git on the [Git page](https://git-scm.com/downloads)
@@ -145,6 +158,15 @@ python -m pip install pymongo
     ```
 5. Replace your ```"YOUR_DISCORD_TOKEN"``` and ```"YOUR_CONNECTION_STRING"``` with their respective token and connection string.
 6. Open ```CommandEvents.py``` and ```EmoteCommand.py``` and replace ```emotes_db``` and ```emotes_collection``` with your respective database and collection name. **(Only do this if you gave your database and collection a name. Otherwise, a database named "emotes_db" and a collection named "emotes_collection" will be created and shown in MongoDB Compass)**
+</br>
+
+>```DISCORD_TOKEN``` is from step 10 of ```Discord Bot Setup```
+
+>```CONNECTION_URL``` is from step 12 of ```MongoDB Setup```
+
+>Your respective database name is from step 13 of ```MongoDB Setup```
+
+>Your respective collection name is from step 13 of ```MongoDB Setup```
 
 #### Running Moji
 1. Go to the bot directory and type ```python emojibot.py```. Now your emojis are loaded to the database and ready for its count to be collected by Moji as long as it is online.

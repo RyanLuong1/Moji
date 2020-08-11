@@ -20,14 +20,9 @@ Moji is a Discord bot which tracks custom emojis usage. It can track both non-an
 </div>
 </br>
 
-## To-do List
-- [x] Load in the server emojis to the database when it loads instead of calling !emotes for the first time
-- [x] Update the database whenever an emoji is added or remove
-- [x] Change the emoji name in the database when the name change as long as the emoji id is the same  
-- [x] Optimize if possible
-- [ ] Add installation setup for Windows
-  
-</br>
+## Table of Contents
+1. [Commands](https://github.com/RyanLuong1/Moji#commands)
+2. [Commands Usage](https://github.com/RyanLuong1/Moji#commands-usage)
 
 ## Commands
 Prefix: !
@@ -44,12 +39,14 @@ Prefix: !
 ## Setup
 Setting up the bot requires yourself to host it.
 
-### Prerequistes
+### Prerequistes for Linux
 * Python 3.6 or higher
 * [discord.py](https://github.com/Rapptz/discord.py)
 * [pymongo](https://api.mongodb.com/python/current/installation.html)
 
-#### Installing Prerequistes for Linux
+#### Installing Prerequistes
+
+##### Terminal
 ```
 sudo apt-get update
 sudo apt-get install python3.6
@@ -57,7 +54,34 @@ python3 -m pip install -U discord.py
 python3 -m pip install pymongo
 ```
 
->First two steps are only required if you do not have python 3.6 installed.
+>First two steps are only required if you do not have python 3.6 installed
+
+>You don't have to get python 3.6, but any version you install must be 3.6 or higher. If you get python 3.7, then it would be ```sudo apt-get install python3.7``` 
+
+>Press enter for each command you type
+
+### Prerequistes for Windows 10
+* [Python 3.6 or higher](https://www.python.org/downloads/windows/)
+* [discord.py](https://github.com/Rapptz/discord.py)
+* [pymongo](https://api.mongodb.com/python/current/installation.html)
+* [Git](https://git-scm.com/downloads)
+
+#### Installing Prerequistes for Windows 10
+
+1. Download the executable on [Python.org](https://www.python.org/downloads/)
+2. Download Git on the [Git page](https://git-scm.com/downloads)
+
+>Mark sure to tick the ```Add Python # to PATH``` box for the Python installer
+
+>Leave everything default for the Git installer
+
+##### Command Prompt
+```
+py -3 -m pip install -U discord.py
+python -m pip install pymongo
+```
+
+>Press enter for each command you type
 
 ### MongoDB Setup
 
@@ -109,9 +133,24 @@ python3 -m pip install pymongo
 #### Running Moji
 1. Go to the bot directory and type ```python3 emojibot.py```. Now your emojis are loaded to the database and ready for its count to be collected by Moji as long as it is online.
 
+
+### Moji Setup (Windows 10)
+1. Open command prompt and type ```cd Downloads```
+2. Type ```git clone https://github.com/RyanLuong1/Moji.git``` 
+3. Type ```cd Moji``` and type ```pip install -r requirements.txt```
+4. In the same directory, create a new file ```.env``` by typing ```type nul > .env``` and opening through the command prompt or through your preferred text editor. It should contain the following:
+    ```
+      DISCORD_TOKEN = "YOUR_DISCORD_TOKEN"
+      CONNECTION_URL = "YOUR_CONNECTION_STRING"
+    ```
+5. Replace your ```"YOUR_DISCORD_TOKEN"``` and ```"YOUR_CONNECTION_STRING"``` with their respective token and connection string.
+6. Open ```CommandEvents.py``` and ```EmoteCommand.py``` and replace ```emotes_db``` and ```emotes_collection``` with your respective database and collection name. **(Only do this if you gave your database and collection a name. Otherwise, a database named "emotes_db" and a collection named "emotes_collection" will be created and shown in MongoDB Compass)**
 </br>
 
-## Troubleshooting
+#### Running Moji
+1. Go to the bot directory and type ```python emojibot.py```. Now your emojis are loaded to the database and ready for its count to be collected by Moji as long as it is online.
+
+## Troubleshooting (Linux)
 
 ```TypeError: __new__() got an unexpected keyword argument 'deny_new'```
 
@@ -120,3 +159,9 @@ python3 -m pip install pymongo
 ```TypeError: __init__() got an unexpected keyword argument 'requote'```
 
 [Solution](https://github.com/Rapptz/discord.py/issues/5162). Read Rapptz's response. Type ```pip3 install -U yarl==1.4.2```
+
+## Troubleshooting (Windows 10)
+
+```the dns response does not contain an answer to the question```
+
+[Solution](https://stackoverflow.com/questions/52930341/pymongo-mongodbsrv-dnspython-must-be-installed-error). Type ```pip install pymongo[srv]```

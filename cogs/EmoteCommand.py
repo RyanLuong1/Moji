@@ -17,12 +17,13 @@ class EmoteCommand(commands.Cog):
     
     def create_emojis_dictionary(list_of_emojis):
         emojis_dict = {}
-        emoji_id = collection.distinct("emoji_id")
-        all_emoji_count = collection.find({"count": {"$gt": -1}}, {"_id": 0, "emoji_name": 0, "emoji_id": 0})
-        emoji_count = [count["count"] for count in all_emoji_count]
-        n = len(emoji_id)
+        emojis_id_field = collection.find({"emoji_id": {"$gt": -1}}, {"_id": 0, "emoji_name": 0})
+        count_field = collection.find({"count": {"$gt": -1}}, {"_id": 0, "emoji_name": 0})
+        emojis_id = [emoji_id["emoji_id"] for emoji_id in emojis_id_field]
+        count = [count["count"] for count in count_field]
+        n = len(count)
         for i in range(n):
-            emojis_dict.update({emoji_id[i]: emoji_count[i]})
+            emojis_dict.update({emojis_id[i]: count[i]})
         return emojis_dict
     
     def remove_previous_embed_documents():

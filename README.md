@@ -30,7 +30,7 @@
 
 ## Description
 
-Moji is a Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 
+Moji is a self hosting Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 
 <div align="center">
 
 ![moji_gif](https://user-images.githubusercontent.com/47546985/89852438-ae319c00-db43-11ea-989a-1a84f81fe15e.gif)

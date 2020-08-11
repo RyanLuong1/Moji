@@ -13,7 +13,7 @@
 
 ## Description
 
-Moji is a Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 
+Moji is a self hosting Discord bot which tracks custom emojis usage. It can track both non-animated and animated emojis from messages and reaction messages. 
 <div align="center">
 
 ![moji_gif](https://user-images.githubusercontent.com/47546985/89852438-ae319c00-db43-11ea-989a-1a84f81fe15e.gif)
@@ -66,7 +66,7 @@ python3 -m pip install pymongo
 * [pymongo](https://api.mongodb.com/python/current/installation.html)
 * [Git](https://git-scm.com/downloads)
 
-#### Installing Prerequistes for Windows 10
+#### Installing Prerequistes
 
 1. Download the executable on [Python.org](https://www.python.org/downloads/)
 2. Download Git on the [Git page](https://git-scm.com/downloads)
@@ -145,7 +145,6 @@ python -m pip install pymongo
     ```
 5. Replace your ```"YOUR_DISCORD_TOKEN"``` and ```"YOUR_CONNECTION_STRING"``` with their respective token and connection string.
 6. Open ```CommandEvents.py``` and ```EmoteCommand.py``` and replace ```emotes_db``` and ```emotes_collection``` with your respective database and collection name. **(Only do this if you gave your database and collection a name. Otherwise, a database named "emotes_db" and a collection named "emotes_collection" will be created and shown in MongoDB Compass)**
-</br>
 
 #### Running Moji
 1. Go to the bot directory and type ```python emojibot.py```. Now your emojis are loaded to the database and ready for its count to be collected by Moji as long as it is online.

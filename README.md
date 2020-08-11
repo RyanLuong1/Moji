@@ -53,9 +53,9 @@ Prefix: !
 Setting up the bot requires yourself to host it.
 
 ### Prerequistes for Linux
-* Python 3.6 or higher
+* [Python 3.6 or higher](https://www.python.org/)
 * [discord.py](https://github.com/Rapptz/discord.py)
-* [pymongo](https://api.mongodb.com/python/current/installation.html)
+* [pymongo](https://pymongo.readthedocs.io/en/stable/)
 
 #### Installing Prerequistes
 
@@ -74,9 +74,9 @@ python3 -m pip install pymongo
 >Press enter for each command you type
 
 ### Prerequistes for Windows 10
-* [Python 3.6 or higher](https://www.python.org/downloads/windows/)
+* [Python 3.6 or higher](https://www.python.org/)
 * [discord.py](https://github.com/Rapptz/discord.py)
-* [pymongo](https://api.mongodb.com/python/current/installation.html)
+* [pymongo](https://pymongo.readthedocs.io/en/stable/)
 * [Git](https://git-scm.com/downloads)
 
 #### Installing Prerequistes for Windows 10

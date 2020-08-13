@@ -95,6 +95,9 @@ python -m pip install pymongo
 
 >Press enter for each command you type
 
+## Setup
+Setting up Moji requires yourself to host it.
+
 ### MongoDB Setup
 
 1. Go to [MongoDB](https://www.mongodb.com/)

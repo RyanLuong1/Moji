@@ -49,8 +49,7 @@ Prefix: !
 
 </br>
 
-## Setup
-Setting up the bot requires yourself to host it.
+## Installation
 
 ### Prerequistes for Linux
 * [Python 3.6 or higher](https://www.python.org/downloads/)

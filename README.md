@@ -11,22 +11,23 @@
 </br>
 
 ## Table of Contents
-1. [Description](https://github.com/RyanLuong1/Moji#description)
-2. [Commands](https://github.com/RyanLuong1/Moji#commands)
-3. [Commands Usage](https://github.com/RyanLuong1/Moji#commands-usage)
-4. [Setup](https://github.com/RyanLuong1/Moji#setup)
-   1. [Prerequistes for Linux](https://github.com/RyanLuong1/Moji#prerequistes-for-linux)
-      1. [Installing Prerequistes](https://github.com/RyanLuong1/Moji#installing-prerequistes)
-   2. [Prerequistes for Windows 10](https://github.com/RyanLuong1/Moji#prerequistes-for-windows-10)
-      1. [Installing Prerequistes](https://github.com/RyanLuong1/Moji#installing-prerequistes-1)
-   3. [MongoDB Setup](https://github.com/RyanLuong1/Moji#mongodb-setup)
-   4. [Discord Bot Setup](https://github.com/RyanLuong1/Moji#discord-bot-setup)
-   5. [Moji Setup (Linux)](https://github.com/RyanLuong1/Moji#moji-setup-linux)
-      1. [Running Moji](https://github.com/RyanLuong1/Moji#running-moji)
-   6. [Moji Setup (Windows 10)](https://github.com/RyanLuong1/Moji#moji-setup-windows-10)
-      1. [Running Moji](https://github.com/RyanLuong1/Moji#running-moji-1)
-5. [Troubleshooting (Linux)](https://github.com/RyanLuong1/Moji#troubleshooting-linux)
-6. [Troubleshooting (Windows 10)](https://github.com/RyanLuong1/Moji#troubleshooting-windows-10)
+* [Description](https://github.com/RyanLuong1/Moji#description)
+* [Commands](https://github.com/RyanLuong1/Moji#commands)
+* [Commands Usage](https://github.com/RyanLuong1/Moji#commands-usage)
+* [Setup](https://github.com/RyanLuong1/Moji#setup)
+   * [Prerequistes for Linux](https://github.com/RyanLuong1/Moji#prerequistes-for-linux)
+      * [Installing Prerequistes](https://github.com/RyanLuong1/Moji#installing-prerequistes)
+   * [Prerequistes for Windows 10](https://github.com/RyanLuong1/Moji#prerequistes-for-windows-10)
+      * [Installing Prerequistes](https://github.com/RyanLuong1/Moji#installing-prerequistes-1)
+   * [MongoDB Setup](https://github.com/RyanLuong1/Moji#mongodb-setup)
+   * [Discord Bot Setup](https://github.com/RyanLuong1/Moji#discord-bot-setup)
+   * [Moji Setup (Linux)](https://github.com/RyanLuong1/Moji#moji-setup-linux)
+      * [Running Moji](https://github.com/RyanLuong1/Moji#running-moji)
+   * [Moji Setup (Windows 10)](https://github.com/RyanLuong1/Moji#moji-setup-windows-10)
+      * [Running Moji](https://github.com/RyanLuong1/Moji#running-moji-1)
+* [Troubleshooting (Linux)](https://github.com/RyanLuong1/Moji#troubleshooting-linux)
+* [Troubleshooting (Windows 10)](https://github.com/RyanLuong1/Moji#troubleshooting-windows-10)
+* [Contact](https://github.com/RyanLuong1/Moji#contact)
 
 ## Description
 
@@ -188,3 +189,6 @@ Setting up Moji requires yourself to host it.
 ```the dns response does not contain an answer to the question```
 
 Make sure the connection string you put in .env is exactly the one you use to connect to MongoDB Compass.
+
+## Contact
+* Discord: ```Ryаn#6575``` 

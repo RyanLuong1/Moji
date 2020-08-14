@@ -1,7 +1,6 @@
 from discord.ext import commands
 from collections import OrderedDict
 from Connection import Connect
-from pymongo import MongoClient
 
 import math
 import discord

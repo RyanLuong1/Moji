@@ -1,6 +1,5 @@
 from discord.ext import commands
 from Connection import Connect
-from pymongo import MongoClient
 
 import re
 import discord
